@@ -748,6 +748,7 @@ const ACH=[
  {id:'hard50',name:'入試レベル攻略',desc:'入試レベルで50問正解'},
  {id:'ta15',name:'反応速度',desc:'タイムアタック15問'},
  {id:'ta20',name:'光速の思考',desc:'タイムアタック20問'},
+ {id:'ta30',name:'超音速',desc:'タイムアタック30問'},
  {id:'streak3',name:'3日連続',desc:'3日連続で学習'},
  {id:'streak7',name:'週間パーフェクト',desc:'7日連続で学習'},
  {id:'streak14',name:'恒常性',desc:'14日連続で学習'},
@@ -830,6 +831,7 @@ function checkAch(){
   if(lvCorrect('hard')>=50)unlock('hard50');
   if(state.taBest>=15)unlock('ta15');
   if(state.taBest>=20)unlock('ta20');
+  if(state.taBest>=30)unlock('ta30');
   [[3,'streak3'],[7,'streak7'],[14,'streak14'],[30,'streak30']]
     .forEach(([n,id])=>{if(state.streak.count>=n)unlock(id);});
   [[5,'lv5'],[10,'lv10'],[20,'lv20']].forEach(([n,id])=>{if(lv>=n)unlock(id);});
@@ -860,7 +862,7 @@ function pool(field,lv){return Q.filter(q=>(field==='all'||q.f===field)&&(lv==='
 function weak(){return Q.filter(q=>{const s=state.stats[q.id];return s&&s.w>0&&s.c<=s.w})}
 function rankOf(p){return p>=95?'S':p>=85?'A':p>=70?'B':p>=50?'C':'D'}
 
-const APP_VER='20260830e';
+const APP_VER='20260830f';
 function forceUpdate(){ location.replace(location.origin+location.pathname+'?v='+Date.now()); }
 async function checkUpdate(silent){
   try{
@@ -981,7 +983,7 @@ function renderHome(){
     <div class="label">⚔️ チャレンジ</div>
     <div class="row2" style="margin-bottom:10px">
       <button class="btn btn-primary" onclick="startQuiz('all')">🎲 ミックス10問</button>
-      <button class="btn btn-accent" onclick="startQuiz('all',true)">⏱ タイムアタック</button>
+      <button class="btn btn-accent" onclick="startQuiz('all',true)">⏱ タイムアタック（60秒）</button>
     </div>
     ${wk?`<button class="btn btn-ghost" style="margin-bottom:10px" onclick="startQuiz('weak')">🔁 苦手だけ復習（${wk}問）</button>`:''}
     <div class="label">🧫 分野べつ</div>
@@ -1054,15 +1056,14 @@ function startQuiz(field,ta){
   if(field==='weak'){list=shuffle(weak());if(!list.length){toast('苦手はまだないよ');return;}list=list.slice(0,10);}
   else{list=pool(field,curLv);
     if(list.length<4){toast('この条件の問題が足りないよ');return;}
-    list=shuffle(list).slice(0,ta?15:10);}
-  g={list,i:0,score:0,miss:[],answered:false,combo:0,maxCombo:0,ta:!!ta,t:ta?20:0,timer:null,field};
+    list=shuffle(list).slice(0,ta?40:10);}
+  g={list,i:0,score:0,miss:[],answered:false,combo:0,maxCombo:0,ta:!!ta,t:ta?60:0,timer:null,field};
   renderQuiz();
 }
 function renderQuiz(){
   if(g.i>=g.list.length)return finish();
   clearInterval(g.timer);
   const q=g.list[g.i];g.answered=false;
-  if(g.ta)g.t=20;
   const opts=shuffle(q.ch.map((c,k)=>({c,k})));
   screen.innerHTML=`
     <button class="back" onclick="quitQuiz()">‹ もどる</button>
@@ -1078,7 +1079,7 @@ function renderQuiz(){
     <div id="fb"></div>`;
   if(g.ta){g.timer=setInterval(()=>{g.t--;const el=$('tm');
     if(el){el.textContent=g.t;if(g.t<=5)el.classList.add('warn');}
-    if(g.t<=0){clearInterval(g.timer);if(!g.answered)answer(-1);}},1000);}
+    if(g.t<=0){clearInterval(g.timer);g.answered=true;finish();}},1000);}
 }
 function answer(k){
   if(g.answered)return;g.answered=true;clearInterval(g.timer);
