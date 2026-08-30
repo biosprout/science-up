@@ -1,0 +1,17 @@
+{
+  "name": "SCIENCE UP! 中学理科",
+  "short_name": "SCIENCE UP!",
+  "description": "中1から高校受験まで、331問の中学理科クイズ。物理・化学・生物・地学の4分野、全問解説つき。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0D1522",
+  "theme_color": "#4DA3FF",
+  "lang": "ja",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

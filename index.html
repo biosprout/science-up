@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4DA3FF">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SCIENCE UP!">
 <title>SCIENCE UP! 中学理科</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -153,6 +164,12 @@
   <div class="topbar">
     <div class="brand"><div class="logo">SCIENCE <span>UP!</span></div><div class="sub">中学理科 / 中1〜高校受験</div></div>
     <div class="rankpill" id="rankPill">総合 --</div>
+  </div>
+  <div id="updBar" style="display:none;align-items:center;gap:10px;background:var(--accent);color:#1A1400;padding:10px 14px;border-radius:12px;margin:0 0 12px;font-size:13px;font-weight:700">
+    <b style="flex:1">新しいバージョンがあります</b>
+    <button onclick="forceUpdate()" style="background:#1A1400;color:var(--accent);border:0;border-radius:8px;padding:7px 12px;font-weight:800;font-size:12px">更新する</button>
+  </div>
+  <div style="display:none">
   </div>
   <div class="screen" id="screen"></div>
 </div>
@@ -731,6 +748,69 @@ function pool(field,lv){return Q.filter(q=>(field==='all'||q.f===field)&&(lv==='
 function weak(){return Q.filter(q=>{const s=state.stats[q.id];return s&&s.w>0&&s.c<=s.w})}
 function rankOf(p){return p>=95?'S':p>=85?'A':p>=70?'B':p>=50?'C':'D'}
 
+const APP_VER='20260830a';
+function forceUpdate(){ location.replace(location.origin+location.pathname+'?v='+Date.now()); }
+async function checkUpdate(silent){
+  try{
+    const r=await fetch(location.origin+location.pathname+'?c='+Date.now(),{cache:'no-store'});
+    const t=await r.text();
+    const m=t.match(/const APP_VER='([^']+)'/);
+    if(m&&m[1]!==APP_VER){
+      const bar=document.getElementById('updBar');
+      if(bar){bar.style.display='flex';bar.querySelector('b').textContent='新しいバージョン '+m[1]+' があります';}
+      return true;
+    }
+    if(!silent)toast('最新版です（'+APP_VER+'）');
+    return false;
+  }catch(e){ if(!silent)toast('確認できませんでした'); return false; }
+}
+function exportProgress(){
+  return JSON.stringify({v:1,ver:APP_VER,d:{xp:state.xp,maxCombo:state.maxCombo,ach:state.ach,
+    cards:state.cards,stats:state.stats,best:state.best,streak:state.streak,
+    taBest:state.taBest,cardMile:state.cardMile,stat:state.stat}});
+}
+function copyProgress(){
+  const t=exportProgress();
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(()=>toast('コピーしました ✓')).catch(()=>selCopy());
+  }else selCopy();
+}
+function selCopy(){
+  const el=document.getElementById('bkText'); if(!el){toast('コピーできませんでした');return;}
+  el.removeAttribute('readonly'); el.select(); el.setSelectionRange(0,999999);
+  try{ document.execCommand('copy'); toast('コピーしました ✓'); }catch(e){ toast('長押しして手動でコピーしてください'); }
+  el.setAttribute('readonly','');
+}
+function importProgress(){
+  const raw=(document.getElementById('impText')||{}).value||'';
+  if(!raw.trim()){toast('貼り付けてから読み込んでください');return;}
+  let o; try{ o=JSON.parse(raw.trim()); }catch(e){ toast('形式が正しくありません'); return; }
+  const d=o&&o.d?o.d:null; if(!d){toast('進捗データが見つかりません');return;}
+  if(!confirm('いまの記録を、貼り付けた内容で置きかえます。よろしいですか？'))return;
+  state.xp=d.xp||0; state.maxCombo=d.maxCombo||0; state.ach=d.ach||[];
+  state.cards=d.cards||[]; state.stats=d.stats||{}; state.best=d.best||{};
+  state.streak=d.streak||{day:'',count:0}; state.taBest=d.taBest||0;
+  state.cardMile=d.cardMile||0; if(d.stat)state.stat=d.stat;
+  save(); toast('記録を復元しました ✓'); renderHome();
+}
+function renderBackup(){
+  const solved=Object.keys(state.stats).length;
+  screen.innerHTML=`
+    <button class="back" onclick="renderHome()">‹ もどる</button>
+    <div class="qhead"><h2>💾 記録の保存</h2></div>
+    <p class="help" style="margin-bottom:12px">学習の記録はこの端末の中だけに保存されています。機種変更のときや、ホーム画面のアイコンを入れ直すときは、ここで書き出して持ち出せます。</p>
+    <div class="statcard" style="display:block;padding:16px">
+      <div style="font-size:12px;color:var(--sub);font-weight:700;margin-bottom:8px">いまの記録（${solved}問 / Lv.${lvlInfo(state.xp).level} / ${state.xp.toLocaleString()} XP）</div>
+      <textarea id="bkText" readonly style="width:100%;min-height:110px;font-size:11px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px">${exportProgress()}</textarea>
+      <button class="btn btn-primary" style="margin-top:10px" onclick="copyProgress()">📋 コピーする</button>
+    </div>
+    <p class="help" style="margin:14px 0 8px">▼ 別の端末やアイコンで復元する場合は、上でコピーした内容をここに貼り付けます。</p>
+    <div class="statcard" style="display:block;padding:16px">
+      <textarea id="impText" placeholder="ここに貼り付け" style="width:100%;min-height:90px;font-size:11px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px"></textarea>
+      <button class="btn btn-ghost" style="margin-top:10px" onclick="importProgress()">読み込む</button>
+    </div>
+    <p class="help" style="margin-top:10px">読み込むと、いまの記録は置きかえられます。</p>`;
+}
 function renderHome(){
   const ids=Object.keys(state.stats);
   const solved=ids.length;
@@ -802,7 +882,12 @@ function renderHome(){
     ${(()=>{const f=ACH_SECRET.filter(a=>state.ach.includes(a.id));
       return f.length?`<div class="label">🕵️ 隠し実績（${f.length}）</div><div class="ach-grid">${
         f.map(a=>`<div class="achb got" style="border-color:#7B8BFF"><div class="an">🕵️ ${a.name}</div><div class="ad">${a.desc}</div></div>`).join('')}</div>`:'';})()}
-    <p class="help">難易度を選ぶと、分野べつ・ミックスの出題がそのレベルにしぼられるよ。XPは難しい問題ほど多くもらえる（入試レベルは1問14XP）。</p>`;
+    <p class="help">難易度を選ぶと、分野べつ・ミックスの出題がそのレベルにしぼられるよ。XPは難しい問題ほど多くもらえる（入試レベルは1問14XP）。</p>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-ghost" style="flex:1;font-size:12px;padding:11px" onclick="checkUpdate(false)">🔄 更新を確認</button>
+      <button class="btn btn-ghost" style="flex:1;font-size:12px;padding:11px" onclick="renderBackup()">💾 記録の保存</button>
+    </div>
+    <p class="help" style="text-align:center;margin-top:8px;opacity:.6">バージョン ${APP_VER}</p>`;
 }
 function setLv(k){curLv=k;renderHome();}
 function renderTitles(){
@@ -937,6 +1022,7 @@ function finish(){
   if(rate>=85)setTimeout(()=>pop(18),200);
 }
 renderHome();
+setTimeout(()=>checkUpdate(true),1500);
 </script>
 </body>
 </html>
