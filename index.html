@@ -7,7 +7,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4DA3FF">
+<meta name="theme-color" content="#1F6FD0">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,18 +20,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0D1522;--panel:#16202F;--panel2:#1D2A3D;
-    --primary:#4DA3FF;--primary-dark:#2A7FD4;--accent:#FFC24B;
-    --danger:#FF6B7A;--text:#E8F0FA;--sub:#8FA3BC;--border:#26354A;
-    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --bg:#F2F6FC;--panel:#FFFFFF;--panel2:#EDF3FB;
+    --primary:#1F6FD0;--primary-dark:#17559E;--accent:#E0921A;
+    --danger:#E03B50;--text:#14203A;--sub:#6B7C93;--border:#DCE5F0;
+    --shadow:0 8px 28px rgba(31,111,208,.10);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
   html,body{height:100%}
   body{font-family:'Noto Sans JP',system-ui,sans-serif;color:var(--text);
-    background:radial-gradient(circle at 20% 0%,#1A2C45 0%,#0D1522 55%);min-height:100dvh;display:flex;justify-content:center}
+    background:radial-gradient(circle at 20% 0%,#DEEAF8 0%,#F2F6FC 55%);min-height:100dvh;display:flex;justify-content:center}
   .app{width:100%;max-width:480px;min-height:100dvh;display:flex;flex-direction:column;position:relative}
   .topbar{padding:18px 20px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;
-    background:linear-gradient(180deg,#0E1A17 70%,rgba(14,26,23,0))}
+    background:linear-gradient(180deg,#F2F6FC 70%,rgba(242,246,252,0))}
   .brand .logo{font-family:'Poppins';font-weight:800;font-size:23px;letter-spacing:-.5px;color:var(--primary)}
   .brand .logo span{color:var(--accent)}
   .brand .sub{font-size:11px;color:var(--sub);font-weight:500;margin-top:2px}
@@ -53,7 +53,7 @@
   .lvbtn:active{transform:scale(.97)}
   .lvbtn .n{font-size:13px;font-weight:900;display:block}
   .lvbtn .d{font-size:9px;color:var(--sub);font-weight:600;margin-top:3px;display:block}
-  .lvbtn.on{background:var(--primary);border-color:var(--primary);color:#08182A}
+  .lvbtn.on{background:var(--primary);border-color:var(--primary);color:#FFFFFF}
   .lvbtn.on .d{color:rgba(8,32,26,.7)}
   .fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
   .fbtn{background:var(--panel);border:1.5px solid var(--border);border-radius:15px;padding:14px;cursor:pointer;transition:.15s;text-align:left}
@@ -65,9 +65,9 @@
   .fbtn .bar i{display:block;height:100%;background:var(--primary);border-radius:99px}
   .btn{border:none;border-radius:14px;font-family:inherit;font-weight:800;font-size:15px;padding:15px;cursor:pointer;transition:.15s;width:100%}
   .btn:active{transform:scale(.98)}
-  .btn-primary{background:var(--primary);color:#08182A}
+  .btn-primary{background:var(--primary);color:#FFFFFF}
   .btn-ghost{background:var(--panel);color:var(--primary);border:1.5px solid var(--border)}
-  .btn-accent{background:var(--accent);color:#2A1D00}
+  .btn-accent{background:var(--accent);color:#6B4A00}
   .back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--sub);font-weight:700;font-size:14px;cursor:pointer;padding:6px 2px;margin-bottom:6px;font-family:inherit}
   .qhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
   .qhead .left{display:flex;align-items:center;gap:10px}
@@ -81,18 +81,18 @@
   .qmeta{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
   .tagf{font-size:10px;font-weight:800;color:var(--primary);letter-spacing:.4px}
   .taglv{font-size:9px;padding:3px 8px;border-radius:7px;font-weight:800}
-  .taglv.easy{background:#123246;color:#7FC4FF}
-  .taglv.std{background:#3A3218;color:var(--accent)}
-  .taglv.hard{background:#3D1D22;color:var(--danger)}
-  .taglv.ibo{background:#2A1A3D;color:#C78BFF}
+  .taglv.easy{background:#E3EEFA;color:#1F6FD0}
+  .taglv.std{background:#FFF6E2;color:var(--accent)}
+  .taglv.hard{background:#FFE8EC;color:var(--danger)}
+  .taglv.ibo{background:#F0E6FA;color:#7A3FC4}
   .lvbtn .n{font-size:12px}
   .qtext{font-size:17px;font-weight:700;line-height:1.55}
   .choices{display:grid;gap:9px}
   .choice{background:var(--panel);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;font-family:inherit;font-size:15px;font-weight:700;
     color:var(--text);cursor:pointer;text-align:left;transition:.12s;line-height:1.45}
   .choice:active{transform:scale(.99)}
-  .choice.correct{background:var(--primary);border-color:var(--primary);color:#08182A}
-  .choice.wrong{background:var(--danger);border-color:var(--danger);color:#2A0009}
+  .choice.correct{background:var(--primary);border-color:var(--primary);color:#FFFFFF}
+  .choice.wrong{background:var(--danger);border-color:var(--danger);color:#7A0012}
   .choice.dim{opacity:.4}
   .exp{border-radius:14px;padding:15px;margin-top:12px;font-size:13px;line-height:1.65;background:var(--panel2);border:1px solid var(--border)}
   .exp b{color:var(--primary)}
@@ -110,26 +110,26 @@
   .lvstat{display:flex;align-items:center;gap:8px;margin-bottom:8px}
   .lvstat:last-child{margin-bottom:0}
   .lvstat .ln{font-size:10px;font-weight:800;width:50px;flex:0 0 auto}
-  .lvstat .ln.lv-easy{color:#7FC4FF}
+  .lvstat .ln.lv-easy{color:#1F6FD0}
   .lvstat .ln.lv-std{color:var(--accent)}
   .lvstat .ln.lv-hard{color:var(--danger)}
-  .lvstat .ln.lv-ibo{color:#C78BFF}
+  .lvstat .ln.lv-ibo{color:#7A3FC4}
   .lvstat .lb{flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden}
   .lvstat .lb i{display:block;height:100%;border-radius:99px}
-  .lvstat .lb i.lv-easy{background:#7FC4FF}
+  .lvstat .lb i.lv-easy{background:#1F6FD0}
   .lvstat .lb i.lv-std{background:var(--accent)}
   .lvstat .lb i.lv-hard{background:var(--danger)}
-  .lvstat .lb i.lv-ibo{background:#C78BFF}
+  .lvstat .lb i.lv-ibo{background:#7A3FC4}
   .lvstat .lnum{font-family:'Poppins';font-size:10px;font-weight:700;color:var(--sub);width:48px;text-align:right;flex:0 0 auto}
   .lvstat .lrate{font-family:'Poppins';font-size:10px;font-weight:800;width:34px;text-align:right;flex:0 0 auto}
   .ach-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
   .achb{background:var(--panel);border:1.5px solid var(--border);border-radius:12px;padding:9px 8px;opacity:.5}
-  .achb.got{opacity:1;border-color:var(--accent);background:#2A2416}
+  .achb.got{opacity:1;border-color:var(--accent);background:#FFF6E2}
   .achb .an{font-size:10px;font-weight:800;line-height:1.3}
   .achb .ad{font-size:8px;color:var(--sub);font-weight:600;margin-top:3px;line-height:1.3}
     .evr{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:11px 13px;margin-bottom:7px;opacity:.45}
   .evr.got{opacity:1}
-  .evr.cur{border-color:var(--accent);background:#2A2416;box-shadow:0 0 0 1.5px var(--accent) inset}
+  .evr.cur{border-color:var(--accent);background:#FFF6E2;box-shadow:0 0 0 1.5px var(--accent) inset}
   .evr .evn{font-family:'Poppins';font-size:11px;font-weight:800;color:var(--sub);width:20px;flex:0 0 auto;text-align:right}
   .evr .eve{font-size:22px;flex:0 0 auto}
   .evr .evb{flex:1;min-width:0}
@@ -143,10 +143,10 @@
   .zkn{font-size:13px;font-weight:900}
   .zkd{font-size:11px;color:var(--sub);font-weight:600;line-height:1.5;margin-top:3px}
   .zktag{font-size:8px;padding:2px 7px;border-radius:6px;font-weight:800;vertical-align:1px}
-  .zktag.N{background:#25443A;color:#8AA79A}
-  .zktag.R{background:#123246;color:#7FC4FF}
-  .zktag.SR{background:#3A2A12;color:var(--accent)}
-  .zktag.H{background:#232C52;color:#9AA8FF}
+  .zktag.N{background:#DCE5F0;color:#6B7C93}
+  .zktag.R{background:#E3EEFA;color:#1F6FD0}
+  .zktag.SR{background:#FFF1D6;color:var(--accent)}
+  .zktag.H{background:#E9ECFF;color:#4A57C4}
   .row2{display:flex;gap:10px}
   .row2 .btn{flex:1}
   .help{font-size:11px;color:var(--sub);line-height:1.6;margin-top:8px}
@@ -518,7 +518,74 @@ const Q=[
   {id:'e_t10',f:'earth',lv:'std',q:'月が地球のまわりを回っているのに、いつも同じ面しか見えないのはなぜか。',ch:['月の自転周期と公転周期が同じだから','月が自転していないから','地球が動くから','月が止まっているから'],a:0,ex:'自転と公転が同じ約27.3日なので、地球からは常に同じ面が見える。'},
   {id:'e_t11',f:'earth',lv:'hard',q:'ある地震で、震源から30km地点でP波が5秒後に到達した。震源から90km地点では何秒後か。',ch:['5秒','10秒','15秒','20秒'],a:2,ex:'P波の速さは30÷5＝6km/s。90÷6＝15秒。'},
   {id:'e_t12',f:'earth',lv:'hard',q:'季節によって南中高度が変わるのに、赤道付近で気温の変化が小さいのはなぜか。',ch:['1年を通して太陽高度が高いから','海が近いから','自転が速いから','大気が厚いから'],a:0,ex:'赤道付近は年間を通して太陽が高く、受け取るエネルギー量の変化が小さい。'},
-  {id:'e_t13',f:'earth',lv:'hard',q:'露点が同じ2つの空気があるとき、含まれる水蒸気量の関係はどうなるか。',ch:['等しい','気温が高いほうが多い','気温が低いほうが多い','わからない'],a:0,ex:'露点は含まれる水蒸気量だけで決まる。気温が違っても露点が同じなら水蒸気量は同じで、湿度は異なる。'}
+  {id:'e_t13',f:'earth',lv:'hard',q:'露点が同じ2つの空気があるとき、含まれる水蒸気量の関係はどうなるか。',ch:['等しい','気温が高いほうが多い','気温が低いほうが多い','わからない'],a:0,ex:'露点は含まれる水蒸気量だけで決まる。気温が違っても露点が同じなら水蒸気量は同じで、湿度は異なる。'},
+  {id:'p_s18',f:'phys',lv:'std',q:'力学的エネルギーの保存が成り立つとき、位置エネルギーと運動エネルギーの和はどうなるか。',ch:['一定に保たれる','増える','減る','変動する'],a:0,ex:'摩擦や空気の抵抗がなければ、両者は互いに移り変わるだけで和は変わらない。'},
+  {id:'p_s19',f:'phys',lv:'std',q:'記録タイマーで台車の運動を調べたとき、テープの打点間隔が広がっていくことが示すのはどれか。',ch:['速さが増している','速さが一定','速さが減っている','止まっている'],a:0,ex:'一定時間ごとに打点するので、間隔が広い＝その間に進んだ距離が長い＝速い。'},
+  {id:'p_s20',f:'phys',lv:'std',q:'等速直線運動をしている物体の、時間と移動距離の関係を表すグラフはどれか。',ch:['原点を通る直線','水平な直線','曲線','原点を通らない直線'],a:0,ex:'距離＝速さ×時間なので比例のグラフになる。時間と速さのグラフなら水平な直線。'},
+  {id:'p_s21',f:'phys',lv:'std',q:'慣性の法則の例として正しいものはどれか。',ch:['急ブレーキで体が前に倒れる','物が落ちる','磁石が引き合う','ばねが伸びる'],a:0,ex:'体は運動を続けようとするため前に倒れる。発進時に後ろへ倒れるのも同じ原理。'},
+  {id:'p_s22',f:'phys',lv:'std',q:'てこがつり合うときの条件として正しいものはどれか.',ch:['力の大きさ×支点からの距離が左右で等しい','力の大きさが左右で等しい','距離が左右で等しい','重さが等しい'],a:0,ex:'モーメントのつり合い。距離が2倍なら力は半分でつり合う。'},
+  {id:'p_s23',f:'phys',lv:'std',q:'電力量の単位として使われないものはどれか。',ch:['J（ジュール）','Wh（ワット時）','kWh','W（ワット）'],a:3,ex:'Wは電力（1秒あたりのエネルギー）の単位。電力量は電力×時間。'},
+  {id:'p_s24',f:'phys',lv:'std',q:'豆電球が直列につながれた回路で、1つが切れると他はどうなるか。',ch:['すべて消える','点いたまま','明るくなる','点滅する'],a:0,ex:'直列は電流の道が1本なので、どこかが切れると回路全体に電流が流れない。'},
+  {id:'p_s25',f:'phys',lv:'std',q:'電磁誘導で流れる電流を大きくする方法として正しくないものはどれか。',ch:['磁石をゆっくり動かす','磁石を速く動かす','コイルの巻き数を増やす','強い磁石を使う'],a:0,ex:'磁界の変化が速いほど誘導電流は大きい。ゆっくりでは小さくなる。'},
+  {id:'p_s26',f:'phys',lv:'std',q:'放射線について正しいものはどれか。',ch:['物質を通り抜ける性質があり、種類によって透過力が違う','目に見える','必ず人工的につくられる','熱を持つ'],a:0,ex:'α線は紙で、β線はアルミ板で、γ線とX線は鉛や厚いコンクリートで止まる。自然界にも存在する。'},
+  {id:'p_s27',f:'phys',lv:'std',q:'音の速さが光の速さより遅いことを日常で確かめられる例はどれか。',ch:['雷の光と音のずれ','影ができること','虹が見えること','鏡に映ること'],a:0,ex:'光はほぼ瞬時に届き、音は1秒に約340m進む。ずれから距離を計算できる。'},
+  {id:'p_h13',f:'phys',lv:'hard',q:'抵抗6Ωと3Ωを並列につなぎ、全体に6Vを加えた。回路全体に流れる電流はいくらか。',ch:['1A','2A','3A','9A'],a:2,ex:'6Ωに1A、3Ωに2A流れるので合計3A。合成抵抗2Ωから6÷2＝3Aとしても同じ。'},
+  {id:'p_h14',f:'phys',lv:'hard',q:'電熱線に6Vを加えて2Aの電流が5分間流れたときの発熱量は何Jか。',ch:['60J','600J','3600J','36000J'],a:2,ex:'電力＝6×2＝12W。12×300秒＝3600J。'},
+  {id:'p_h15',f:'phys',lv:'hard',q:'質量3kgの物体を高さ2mまで持ち上げ、静かに落とした。地面に達する直前の運動エネルギーは何Jか（1kgあたり10N）。',ch:['6J','30J','60J','600J'],a:2,ex:'位置エネルギー＝30N×2m＝60J。これがすべて運動エネルギーに変わる。'},
+  {id:'p_h16',f:'phys',lv:'hard',q:'斜面を使って物体を持ち上げるとき、斜面の角度を小さくするとどうなるか。',ch:['力は小さくなるが距離が長くなる','力も距離も小さくなる','力が大きくなる','仕事が減る'],a:0,ex:'仕事の原理。仕事の量は変わらない。'},
+  {id:'p_h17',f:'phys',lv:'hard',q:'60Wの電球と20Wの電球を並列につないだとき、明るいのはどちらか。',ch:['60Wの電球','20Wの電球','同じ','電圧による'],a:0,ex:'並列では電圧が等しいので、消費電力の大きい60Wのほうが明るい。直列だと結果が逆になる。'},
+  {id:'p_h18',f:'phys',lv:'hard',q:'振り子の周期を長くする方法として正しいものはどれか。',ch:['ひもを長くする','おもりを重くする','振れ幅を大きくする','おもりを軽くする'],a:0,ex:'周期はひもの長さで決まり、おもりの質量や振れ幅（小さい範囲）にはほとんど影響されない。'},
+  {id:'p_h19',f:'phys',lv:'hard',q:'水面に浮かぶ物体にはたらく浮力と重力の関係はどれか。',ch:['浮力と重力がつり合っている','浮力が大きい','重力が大きい','どちらも0'],a:0,ex:'静止して浮いているので合力は0。押しのけた水の重さが物体の重さに等しい。'},
+  {id:'c_s19',f:'chem',lv:'std',q:'水溶液に電流を流したとき、陽イオンが移動する向きはどれか。',ch:['陰極へ','陽極へ','移動しない','両方へ'],a:0,ex:'陽イオンは陰極、陰イオンは陽極へ引かれる。名前と逆になる点が要注意。'},
+  {id:'c_s20',f:'chem',lv:'std',q:'塩酸を電気分解したとき、陽極で発生する気体はどれか。',ch:['塩素','水素','酸素','二酸化炭素'],a:0,ex:'陰イオンの塩化物イオンが陽極で電子を失って塩素になる。陰極は水素。'},
+  {id:'c_s21',f:'chem',lv:'std',q:'酸性の水溶液に共通する性質として正しくないものはどれか。',ch:['赤色リトマス紙を青くする','青色リトマス紙を赤くする','マグネシウムを入れると水素が出る','すっぱい味がする'],a:0,ex:'赤を青にするのはアルカリ性。酸性は青を赤にする。'},
+  {id:'c_s22',f:'chem',lv:'std',q:'中和したかどうかを確かめる方法として適切なものはどれか.',ch:['BTB溶液が緑色になるか調べる','においをかぐ','温度を測る','色を見る'],a:0,ex:'指示薬で中性になったことを確認する。過不足なく中和した点を中和点という。'},
+  {id:'c_s23',f:'chem',lv:'std',q:'化学電池でエネルギーはどのように変換されるか。',ch:['化学エネルギーから電気エネルギー','電気から化学','熱から電気','光から電気'],a:0,ex:'物質の化学変化にともなって電子が移動し、電流が取り出される。'},
+  {id:'c_s24',f:'chem',lv:'std',q:'燃料電池の反応で生じる物質はどれか。',ch:['水','二酸化炭素','窒素酸化物','ススのみ'],a:0,ex:'水素と酸素から水ができる。発電時に二酸化炭素を出さないのが特長。'},
+  {id:'c_s25',f:'chem',lv:'std',q:'化学反応式を書くとき、左右で等しくしなければならないものはどれか。',ch:['原子の種類と数','分子の数','質量のみ','体積のみ'],a:0,ex:'原子は反応の前後で種類も数も変わらない。これが質量保存の法則の根拠。'},
+  {id:'c_s26',f:'chem',lv:'std',q:'酸化銀を加熱して銀ができたとき、この変化を何というか。',ch:['分解（熱分解）','化合','中和','電離'],a:0,ex:'1種類の物質が2種類以上に分かれる分解。加熱によるものを熱分解という。'},
+  {id:'c_s27',f:'chem',lv:'std',q:'ろうそくが燃え続けるために必要なことはどれか。',ch:['酸素が供給され続けること','水があること','光があること','風が強いこと'],a:0,ex:'燃焼には可燃物・酸素・発火点以上の温度の3つが必要。'},
+  {id:'c_s28',f:'chem',lv:'std',q:'石油からつくられるプラスチックの性質として正しいものはどれか.',ch:['種類によって性質が大きく異なる','すべて同じ性質','必ず水に浮く','必ず燃えない'],a:0,ex:'ポリエチレン、ポリスチレン、ペットなど、密度も耐熱性も異なる。分別の根拠になる。'},
+  {id:'c_h12',f:'chem',lv:'hard',q:'水20gに食塩を溶かして20%の水溶液を作るには、食塩は何g必要か。',ch:['4g','5g','20g','25g'],a:1,ex:'食塩をxとすると x/(20+x)=0.2。x＝5g。水溶液全体は25gになる。'},
+  {id:'c_h13',f:'chem',lv:'hard',q:'うすい塩酸に石灰石を加えたところ、二酸化炭素が0.44g発生し、容器全体の質量は反応前より0.44g減った。この結果が示すことはどれか.',ch:['発生した気体が空気中へ逃げたこと','質量が消えたこと','石灰石が増えたこと','水ができたこと'],a:0,ex:'密閉していれば質量は変わらない。開放系では気体の分だけ見かけ上減る。'},
+  {id:'c_h14',f:'chem',lv:'hard',q:'マグネシウム0.9gと結びつく酸素の質量はいくらか（Mg:O＝3:2）。',ch:['0.3g','0.6g','0.9g','1.5g'],a:1,ex:'0.9×(2/3)＝0.6g。生成する酸化マグネシウムは1.5g。'},
+  {id:'c_h15',f:'chem',lv:'hard',q:'塩酸20cm3に水酸化ナトリウム水溶液を加えたところ、16cm3でちょうど中和した。塩酸を30cm3にすると必要量は何cm3か。',ch:['20cm3','24cm3','26cm3','32cm3'],a:1,ex:'16×(30/20)＝24cm3。'},
+  {id:'c_h16',f:'chem',lv:'hard',q:'60℃の水100gに物質Aを溶けるだけ溶かしたら溶解度は80gだった。この飽和水溶液の質量パーセント濃度はおよそいくらか。',ch:['約36%','約44%','約56%','約80%'],a:1,ex:'80/(100+80)×100≒44.4%。分母を全体にするのを忘れやすい。'},
+  {id:'c_h17',f:'chem',lv:'hard',q:'鉄と硫黄の混合物を加熱する実験で、加熱前と加熱後の物質を見分ける方法として適切でないものはどれか。',ch:['磁石を近づける','塩酸を加えて発生する気体を調べる','色を観察する','質量を測る'],a:3,ex:'質量は変わらない（密閉時）。磁石につくか、水素か硫化水素か、色が黒いかで判断する。'},
+  {id:'c_h18',f:'chem',lv:'hard',q:'電気分解で陰極に金属が付着する水溶液はどれか。',ch:['塩化銅水溶液','塩酸','水酸化ナトリウム水溶液','食塩水'],a:0,ex:'銅イオンが陰極で電子を受け取り銅になる。塩酸では水素が発生する。'},
+  {id:'b_s18',f:'bio',lv:'std',q:'細胞分裂の順序として正しいものはどれか。',ch:['染色体が現れる→中央に並ぶ→両端に移動→2つに分かれる','中央に並ぶ→染色体が現れる→分かれる→移動','分かれる→現れる→並ぶ→移動','移動→並ぶ→現れる→分かれる'],a:0,ex:'核の中に染色体が現れ、赤道面に並び、両極へ引かれ、細胞質が分かれる。'},
+  {id:'b_s19',f:'bio',lv:'std',q:'植物の体細胞分裂で、動物と異なる点はどれか。',ch:['細胞板ができて仕切られる','くびれて分かれる','染色体がない','分裂しない'],a:0,ex:'植物は中央に細胞板ができ、動物は細胞質がくびれて2つになる。'},
+  {id:'b_s20',f:'bio',lv:'std',q:'被子植物の受精のしくみとして正しいものはどれか。',ch:['花粉管が伸びて精細胞が胚珠へ運ばれる','花粉が直接胚珠につく','風で運ばれるだけ','受精しない'],a:0,ex:'柱頭についた花粉から花粉管が伸び、その中を精細胞が移動して卵細胞と受精する。'},
+  {id:'b_s21',f:'bio',lv:'std',q:'分離の法則の説明として正しいものはどれか。',ch:['対になった遺伝子が分かれて別々の生殖細胞に入る','遺伝子が混ざる','遺伝子が消える','遺伝子が倍になる'],a:0,ex:'減数分裂で対立遺伝子が分離する。メンデルが見出した法則のひとつ。'},
+  {id:'b_s22',f:'bio',lv:'std',q:'DNAの説明として正しいものはどれか。',ch:['遺伝子の本体で、染色体に含まれる','タンパク質の一種','細胞膜の成分','エネルギー源'],a:0,ex:'デオキシリボ核酸。染色体の中にあり、遺伝情報を担う。'},
+  {id:'b_s23',f:'bio',lv:'std',q:'消化された養分のうち、脂肪が分解されてできるものはどれか。',ch:['脂肪酸とモノグリセリド','ブドウ糖','アミノ酸','麦芽糖'],a:0,ex:'デンプン→ブドウ糖、タンパク質→アミノ酸、脂肪→脂肪酸とモノグリセリド。'},
+  {id:'b_s24',f:'bio',lv:'std',q:'肝臓のはたらきとして正しくないものはどれか。',ch:['尿をつくる','有害なアンモニアを尿素に変える','養分をたくわえる','胆汁をつくる'],a:0,ex:'尿をつくるのはじん臓。肝臓は解毒・貯蔵・胆汁の生成を担う。'},
+  {id:'b_s25',f:'bio',lv:'std',q:'体内で酸素の少ない血液が流れている血管はどれか。',ch:['肺動脈と大静脈','肺静脈と大動脈','大動脈のみ','肺静脈のみ'],a:0,ex:'肺動脈は心臓から肺へ、大静脈は全身から心臓へ、いずれも静脈血が流れる。'},
+  {id:'b_s26',f:'bio',lv:'std',q:'生態系における炭素の循環として正しいものはどれか。',ch:['光合成で取り込まれ呼吸や分解で戻る','一方向にしか進まない','循環しない','水だけが循環する'],a:0,ex:'大気の二酸化炭素が生物の体をめぐり、呼吸・分解によって再び大気に戻る。'},
+  {id:'b_s27',f:'bio',lv:'std',q:'外来種が問題となる理由として正しいものはどれか。',ch:['もとからいた生物を減らし生態系のつり合いを崩すから','数が少ないから','食べられないから','見た目が悪いから'],a:0,ex:'天敵がいないため増えやすく、在来種を捕食したり生息場所を奪ったりする。'},
+  {id:'b_h12',f:'bio',lv:'hard',q:'ある植物で、丸い種子と丸い種子をかけ合わせたところ、しわの種子ができた。親の遺伝子型として正しいものはどれか。',ch:['どちらもAa','どちらもAA','AAとaa','どちらもaa'],a:0,ex:'しわ（aa）が出るには両親がaを持つ必要がある。丸なのでAaどうし。'},
+  {id:'b_h13',f:'bio',lv:'hard',q:'だ液のはたらきを調べる実験で、40℃と80℃で比べたところ80℃では糖ができなかった。この理由はどれか。',ch:['高温で酵素が変性して働かなくなったから','デンプンが分解されたから','だ液が濃すぎたから','時間が短かったから'],a:0,ex:'酵素はタンパク質でできており、高温で立体構造が壊れて元に戻らない。'},
+  {id:'b_h14',f:'bio',lv:'hard',q:'光合成速度が光の強さに比例しなくなる（頭打ちになる）理由として考えられるものはどれか。',ch:['二酸化炭素の量など他の条件が制限になるから','光が弱いから','温度が下がるから','葉が減るから'],a:0,ex:'限定要因の考え方。ある要因を増やしても、他が不足していれば全体は増えない。'},
+  {id:'b_h15',f:'bio',lv:'hard',q:'ヒトの体内で、細胞呼吸によって生じた二酸化炭素が体外に出るまでの順序はどれか。',ch:['細胞→血液→肺→体外','細胞→肺→血液→体外','血液→細胞→肺→体外','細胞→じん臓→体外'],a:0,ex:'細胞で生じた二酸化炭素は血しょうに溶けて運ばれ、肺胞で交換されて呼気に出る。'},
+  {id:'b_h16',f:'bio',lv:'hard',q:'食物連鎖の上位にある生物の体内で有害物質の濃度が高くなる現象を何というか。',ch:['生物濃縮','食物網','生態ピラミッド','分解'],a:0,ex:'水俣病の原因となった有機水銀も、食物連鎖を通じて濃縮された。'},
+  {id:'b_h17',f:'bio',lv:'hard',q:'同じ形質を持つ個体を効率よく増やしたいとき、適した方法はどれか。',ch:['さし木などの無性生殖','種子から育てる','異なる品種と交配する','自然にまかせる'],a:0,ex:'無性生殖なら親と同じ遺伝子を持つ個体（クローン）が得られる。'},
+  {id:'e_s18',f:'earth',lv:'std',q:'マグマのねばりけと火山の形の関係として正しいものはどれか。',ch:['ねばりけが弱いと傾斜のゆるやかな形になる','ねばりけが弱いとドーム状になる','関係はない','必ず円錐形になる'],a:0,ex:'ねばりけが弱いと溶岩が流れ広がり、傾斜のゆるい盾状の火山になる。'},
+  {id:'e_s19',f:'earth',lv:'std',q:'地震のゆれの大きさが場所によって違う理由として適切なものはどれか。',ch:['地盤の性質や震源からの距離が違うから','時間が違うから','気温が違うから','人口が違うから'],a:0,ex:'やわらかい地盤ではゆれが増幅される。震源距離が近いほど震度も大きい。'},
+  {id:'e_s20',f:'earth',lv:'std',q:'液状化現象が起こりやすい場所はどれか。',ch:['地下水位が高い砂地の埋め立て地','固い岩盤の上','山の斜面','高台'],a:0,ex:'地震でゆすられ、砂の粒がばらばらになって地盤が液体のようにふるまう。'},
+  {id:'e_s21',f:'earth',lv:'std',q:'断層のうち、両側から押される力ではたらくものはどれか。',ch:['逆断層','正断層','横ずれ断層','どれでもない'],a:0,ex:'押す力で上盤がずり上がるのが逆断層。引かれる力ではたらくのが正断層。'},
+  {id:'e_s22',f:'earth',lv:'std',q:'地層の逆転を判断する手がかりとなるものはどれか。',ch:['級化構造や化石の並び','地層の色','厚さ','傾き'],a:0,ex:'一度の堆積で粒が下から粗く上へ細かくなる（級化）。逆になっていれば逆転を疑う。'},
+  {id:'e_s23',f:'earth',lv:'std',q:'空気1m3中の水蒸気量が同じで気温だけが上がったとき、湿度はどうなるか。',ch:['下がる','上がる','変わらない','0になる'],a:0,ex:'飽和水蒸気量が増えるため、同じ水蒸気量でも割合（湿度）は下がる。'},
+  {id:'e_s24',f:'earth',lv:'std',q:'積乱雲が発達しやすい条件はどれか。',ch:['強い上昇気流があるとき','下降気流のとき','気温が低いとき','風がないとき'],a:0,ex:'夏の強い日射や寒冷前線で急激な上昇気流が生じ、垂直に発達する。'},
+  {id:'e_s25',f:'earth',lv:'std',q:'台風の特徴として正しいものはどれか。',ch:['前線をともなわず等圧線がほぼ同心円状','前線をともなう','等圧線が直線','風が弱い'],a:0,ex:'熱帯低気圧が発達したもの。中心付近には目ができることがある。'},
+  {id:'e_s26',f:'earth',lv:'std',q:'太陽の南中高度が季節で変わる理由はどれか。',ch:['地軸が傾いたまま公転しているから','太陽が動くから','自転の速さが変わるから','大気の影響'],a:0,ex:'地軸が約23.4度傾いているため、季節によって太陽の高さと昼の長さが変わる。'},
+  {id:'e_s27',f:'earth',lv:'std',q:'惑星が恒星と異なる点として正しいものはどれか。',ch:['自ら光を出さず反射して光る','動かない','熱い','大きい'],a:0,ex:'恒星は自ら光る。惑星は太陽の光を反射している。'},
+  {id:'e_h13',f:'earth',lv:'hard',q:'P波の速さ8km/s、S波の速さ4km/sのとき、初期微動継続時間が5秒の地点の震源距離はどれか。',ch:['20km','40km','60km','80km'],a:1,ex:'距離をdとすると d/4－d/8＝5、d/8＝5、d＝40km。'},
+  {id:'e_h14',f:'earth',lv:'hard',q:'気温25℃（飽和水蒸気量23.1g/m3）で湿度60%の空気1m3に含まれる水蒸気量はおよそいくらか。',ch:['約9.2g','約13.9g','約18.5g','約23.1g'],a:1,ex:'23.1×0.6＝13.86g。'},
+  {id:'e_h15',f:'earth',lv:'hard',q:'ある地点で、標高が100m上がるごとに気温が0.6℃下がるとする。標高0mで20℃のとき、標高1500m地点の気温はおよそ何℃か。',ch:['5℃','9℃','11℃','14℃'],a:2,ex:'1500÷100×0.6＝9℃下がるので、20－9＝11℃。'},
+  {id:'e_h16',f:'earth',lv:'hard',q:'日本のある地点で、北極星の高度が35度だった。この地点の緯度はどれか。',ch:['北緯35度','北緯55度','南緯35度','判断できない'],a:0,ex:'北極星の高度はその地点の緯度に等しい。'},
+  {id:'e_h17',f:'earth',lv:'hard',q:'午後8時に南中していた星は、2か月後の午後8時にはどのあたりに見えるか。',ch:['南から西へ約60度動いた位置','東へ60度','変わらない','真上'],a:0,ex:'年周運動で1か月に約30度西へずれる。2か月で約60度。'},
+  {id:'e_h18',f:'earth',lv:'hard',q:'ある地層で、下から泥岩・砂岩・れき岩の順に重なっていた。この地域の環境変化として考えられるものはどれか。',ch:['海岸に近づいた（浅くなった）','沖へ遠ざかった','変化なし','火山活動があった'],a:0,ex:'粒が上へいくほど粗くなる＝河口や海岸に近づいた＝海が浅くなったと考えられる。'},
+  {id:'e_h19',f:'earth',lv:'hard',q:'金星が満ち欠けし、見かけの大きさも大きく変わる理由はどれか。',ch:['地球との距離が大きく変わるから','自転するから','大気があるから','光を出すから'],a:0,ex:'内惑星なので地球との距離が大きく変化する。近いときは大きく細く見える。'}
 ];
 const LV={easy:{n:'基礎',d:'中1〜中2'},std:{n:'標準',d:'中3'},hard:{n:'入試',d:'高校受験'}};
 const FICON={phys:'⚡',chem:'🧪',bio:'🌱',earth:'🌍'};
@@ -748,7 +815,7 @@ function pool(field,lv){return Q.filter(q=>(field==='all'||q.f===field)&&(lv==='
 function weak(){return Q.filter(q=>{const s=state.stats[q.id];return s&&s.w>0&&s.c<=s.w})}
 function rankOf(p){return p>=95?'S':p>=85?'A':p>=70?'B':p>=50?'C':'D'}
 
-const APP_VER='20260830a';
+const APP_VER='20260830d';
 function forceUpdate(){ location.replace(location.origin+location.pathname+'?v='+Date.now()); }
 async function checkUpdate(silent){
   try{
@@ -881,7 +948,7 @@ function renderHome(){
     </div>
     ${(()=>{const f=ACH_SECRET.filter(a=>state.ach.includes(a.id));
       return f.length?`<div class="label">🕵️ 隠し実績（${f.length}）</div><div class="ach-grid">${
-        f.map(a=>`<div class="achb got" style="border-color:#7B8BFF"><div class="an">🕵️ ${a.name}</div><div class="ad">${a.desc}</div></div>`).join('')}</div>`:'';})()}
+        f.map(a=>`<div class="achb got" style="border-color:#5A68D8"><div class="an">🕵️ ${a.name}</div><div class="ad">${a.desc}</div></div>`).join('')}</div>`:'';})()}
     <p class="help">難易度を選ぶと、分野べつ・ミックスの出題がそのレベルにしぼられるよ。XPは難しい問題ほど多くもらえる（入試レベルは1問14XP）。</p>
     <div style="display:flex;gap:8px;margin-top:16px">
       <button class="btn btn-ghost" style="flex:1;font-size:12px;padding:11px" onclick="checkUpdate(false)">🔄 更新を確認</button>
@@ -924,7 +991,7 @@ function renderZukan(){
   };
   const hid=CARDS.filter(c=>c.r==='H'&&have.has(c.id));
   const hidSec=hid.length?`<div class="label">🔮 隠し図鑑（${hid.length}）</div>`+
-    hid.map(c=>`<div class="zkr got" style="border-color:#7B8BFF"><span class="zke">${c.e}</span><div class="zkb"><div class="zkn">${c.n} <span class="zktag H">隠し</span></div><div class="zkd">${c.d}</div></div></div>`).join(''):'';
+    hid.map(c=>`<div class="zkr got" style="border-color:#5A68D8"><span class="zke">${c.e}</span><div class="zkb"><div class="zkn">${c.n} <span class="zktag H">隠し</span></div><div class="zkd">${c.d}</div></div></div>`).join(''):'';
   screen.innerHTML=`
     <button class="back" onclick="renderHome()">‹ 戻る</button>
     <div class="qhead"><h2>📖 科学の図鑑</h2><span class="combo" style="color:var(--accent)">${got}/${norm.length} 発見</span></div>
@@ -954,7 +1021,7 @@ function renderQuiz(){
   const opts=shuffle(q.ch.map((c,k)=>({c,k})));
   screen.innerHTML=`
     <button class="back" onclick="quitQuiz()">‹ もどる</button>
-    <div class="qhead"><div class="left"><h2>${g.ta?'⏱ タイムアタック':'🧫 クイズ'}</h2>
+    <div class="qhead"><div class="left"><h2>${g.ta?'⏱ タイムアタック':'📝 クイズ'}</h2>
       ${g.combo>=2?`<span class="combo">🔥 ${g.combo}コンボ</span>`:''}</div>
       ${g.ta?`<span class="timer" id="tm">${g.t}</span>`:`<span class="combo">${g.i+1}/${g.list.length}</span>`}</div>
     <div class="bar-top"><i style="width:${g.i/g.list.length*100}%"></i></div>
