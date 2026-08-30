@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SCIENCE UP! 中学理科</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1522;--panel:#16202F;--panel2:#1D2A3D;
+    --primary:#4DA3FF;--primary-dark:#2A7FD4;--accent:#FFC24B;
+    --danger:#FF6B7A;--text:#E8F0FA;--sub:#8FA3BC;--border:#26354A;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Noto Sans JP',system-ui,sans-serif;color:var(--text);
+    background:radial-gradient(circle at 20% 0%,#1A2C45 0%,#0D1522 55%);min-height:100dvh;display:flex;justify-content:center}
+  .app{width:100%;max-width:480px;min-height:100dvh;display:flex;flex-direction:column;position:relative}
+  .topbar{padding:18px 20px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;
+    background:linear-gradient(180deg,#0E1A17 70%,rgba(14,26,23,0))}
+  .brand .logo{font-family:'Poppins';font-weight:800;font-size:23px;letter-spacing:-.5px;color:var(--primary)}
+  .brand .logo span{color:var(--accent)}
+  .brand .sub{font-size:11px;color:var(--sub);font-weight:500;margin-top:2px}
+  .rankpill{background:var(--panel2);border:1px solid var(--border);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;color:var(--accent)}
+  .screen{flex:1;overflow-y:auto;padding:6px 20px 40px;-webkit-overflow-scrolling:touch}
+  .statcard{background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px;display:flex;align-items:center;gap:18px}
+  .ring{position:relative;width:92px;height:92px;flex:0 0 auto}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .in b{font-family:'Poppins';font-size:23px;font-weight:800;color:var(--primary);line-height:1}
+  .ring .in small{font-size:9px;color:var(--sub);font-weight:600;margin-top:2px}
+  .stinfo h2{font-size:15px;font-weight:900;margin-bottom:8px}
+  .stinfo .row{display:flex;gap:16px}
+  .stinfo .row div{font-size:11px;color:var(--sub);font-weight:600}
+  .stinfo .row b{display:block;font-family:'Poppins';font-size:19px;color:var(--text);font-weight:700}
+  .label{font-size:12px;font-weight:800;color:var(--sub);margin:10px 2px 10px;letter-spacing:.3px}
+  .lvrow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:6px}
+  .lvbtn{background:var(--panel);border:1.5px solid var(--border);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:.15s}
+  .lvbtn:active{transform:scale(.97)}
+  .lvbtn .n{font-size:13px;font-weight:900;display:block}
+  .lvbtn .d{font-size:9px;color:var(--sub);font-weight:600;margin-top:3px;display:block}
+  .lvbtn.on{background:var(--primary);border-color:var(--primary);color:#08182A}
+  .lvbtn.on .d{color:rgba(8,32,26,.7)}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .fbtn{background:var(--panel);border:1.5px solid var(--border);border-radius:15px;padding:14px;cursor:pointer;transition:.15s;text-align:left}
+  .fbtn:active{transform:scale(.98)}
+  .fbtn .ic{font-size:20px}
+  .fbtn .n{font-size:13px;font-weight:800;margin-top:5px}
+  .fbtn .m{font-size:10px;color:var(--sub);font-weight:600;margin-top:3px}
+  .fbtn .bar{height:4px;background:var(--border);border-radius:99px;margin-top:8px;overflow:hidden}
+  .fbtn .bar i{display:block;height:100%;background:var(--primary);border-radius:99px}
+  .btn{border:none;border-radius:14px;font-family:inherit;font-weight:800;font-size:15px;padding:15px;cursor:pointer;transition:.15s;width:100%}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--primary);color:#08182A}
+  .btn-ghost{background:var(--panel);color:var(--primary);border:1.5px solid var(--border)}
+  .btn-accent{background:var(--accent);color:#2A1D00}
+  .back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--sub);font-weight:700;font-size:14px;cursor:pointer;padding:6px 2px;margin-bottom:6px;font-family:inherit}
+  .qhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .qhead .left{display:flex;align-items:center;gap:10px}
+  .qhead h2{font-size:16px;font-weight:900}
+  .timer{font-family:'Poppins';font-weight:800;font-size:20px;color:var(--accent)}
+  .timer.warn{color:var(--danger)}
+  .combo{font-family:'Poppins';font-weight:800;font-size:13px;color:var(--accent)}
+  .bar-top{height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:16px}
+  .bar-top i{display:block;height:100%;background:var(--primary);border-radius:99px;transition:width .3s}
+  .qcard{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:22px 18px;box-shadow:var(--shadow);margin-bottom:14px}
+  .qmeta{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .tagf{font-size:10px;font-weight:800;color:var(--primary);letter-spacing:.4px}
+  .taglv{font-size:9px;padding:3px 8px;border-radius:7px;font-weight:800}
+  .taglv.easy{background:#123246;color:#7FC4FF}
+  .taglv.std{background:#3A3218;color:var(--accent)}
+  .taglv.hard{background:#3D1D22;color:var(--danger)}
+  .taglv.ibo{background:#2A1A3D;color:#C78BFF}
+  .lvbtn .n{font-size:12px}
+  .qtext{font-size:17px;font-weight:700;line-height:1.55}
+  .choices{display:grid;gap:9px}
+  .choice{background:var(--panel);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;font-family:inherit;font-size:15px;font-weight:700;
+    color:var(--text);cursor:pointer;text-align:left;transition:.12s;line-height:1.45}
+  .choice:active{transform:scale(.99)}
+  .choice.correct{background:var(--primary);border-color:var(--primary);color:#08182A}
+  .choice.wrong{background:var(--danger);border-color:var(--danger);color:#2A0009}
+  .choice.dim{opacity:.4}
+  .exp{border-radius:14px;padding:15px;margin-top:12px;font-size:13px;line-height:1.65;background:var(--panel2);border:1px solid var(--border)}
+  .exp b{color:var(--primary)}
+  .result{text-align:center;padding:26px 10px}
+  .result .rank{font-family:'Poppins';font-size:62px;font-weight:800;line-height:1;color:var(--accent)}
+  .result .emoji{font-size:48px;margin-bottom:4px}
+  .result .big{font-family:'Poppins';font-size:44px;font-weight:800;color:var(--primary);line-height:1;margin-top:6px}
+  .result h2{font-size:18px;font-weight:900;margin:10px 0 4px}
+  .result p{color:var(--sub);font-weight:600;font-size:13px;margin-bottom:6px}
+  .misslist{text-align:left;background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:4px;margin:14px 0;max-height:260px;overflow-y:auto}
+  .misslist .r{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;line-height:1.5}
+  .misslist .r:last-child{border:none}
+  .misslist .r .q{font-weight:700;margin-bottom:4px}
+  .misslist .r .a{color:var(--primary);font-weight:700;font-size:12px}
+  .lvstat{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .lvstat:last-child{margin-bottom:0}
+  .lvstat .ln{font-size:10px;font-weight:800;width:50px;flex:0 0 auto}
+  .lvstat .ln.lv-easy{color:#7FC4FF}
+  .lvstat .ln.lv-std{color:var(--accent)}
+  .lvstat .ln.lv-hard{color:var(--danger)}
+  .lvstat .ln.lv-ibo{color:#C78BFF}
+  .lvstat .lb{flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+  .lvstat .lb i{display:block;height:100%;border-radius:99px}
+  .lvstat .lb i.lv-easy{background:#7FC4FF}
+  .lvstat .lb i.lv-std{background:var(--accent)}
+  .lvstat .lb i.lv-hard{background:var(--danger)}
+  .lvstat .lb i.lv-ibo{background:#C78BFF}
+  .lvstat .lnum{font-family:'Poppins';font-size:10px;font-weight:700;color:var(--sub);width:48px;text-align:right;flex:0 0 auto}
+  .lvstat .lrate{font-family:'Poppins';font-size:10px;font-weight:800;width:34px;text-align:right;flex:0 0 auto}
+  .ach-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .achb{background:var(--panel);border:1.5px solid var(--border);border-radius:12px;padding:9px 8px;opacity:.5}
+  .achb.got{opacity:1;border-color:var(--accent);background:#2A2416}
+  .achb .an{font-size:10px;font-weight:800;line-height:1.3}
+  .achb .ad{font-size:8px;color:var(--sub);font-weight:600;margin-top:3px;line-height:1.3}
+    .evr{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:11px 13px;margin-bottom:7px;opacity:.45}
+  .evr.got{opacity:1}
+  .evr.cur{border-color:var(--accent);background:#2A2416;box-shadow:0 0 0 1.5px var(--accent) inset}
+  .evr .evn{font-family:'Poppins';font-size:11px;font-weight:800;color:var(--sub);width:20px;flex:0 0 auto;text-align:right}
+  .evr .eve{font-size:22px;flex:0 0 auto}
+  .evr .evb{flex:1;min-width:0}
+  .evr .evt{font-size:13px;font-weight:800;line-height:1.35}
+  .evr .evd{font-family:'Poppins';font-size:10px;color:var(--sub);font-weight:700;margin-top:2px}
+  .evr.cur .evd{color:var(--accent)}
+  .zkr{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:8px;opacity:.55}
+  .zkr.got{opacity:1}
+  .zke{font-size:26px;flex:0 0 auto}
+  .zkb{flex:1}
+  .zkn{font-size:13px;font-weight:900}
+  .zkd{font-size:11px;color:var(--sub);font-weight:600;line-height:1.5;margin-top:3px}
+  .zktag{font-size:8px;padding:2px 7px;border-radius:6px;font-weight:800;vertical-align:1px}
+  .zktag.N{background:#25443A;color:#8AA79A}
+  .zktag.R{background:#123246;color:#7FC4FF}
+  .zktag.SR{background:#3A2A12;color:var(--accent)}
+  .zktag.H{background:#232C52;color:#9AA8FF}
+  .row2{display:flex;gap:10px}
+  .row2 .btn{flex:1}
+  .help{font-size:11px;color:var(--sub);line-height:1.6;margin-top:8px}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    padding:12px 22px;border-radius:999px;font-size:13px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .pop{position:fixed;inset:0;pointer-events:none;z-index:40}
+  .pop span{position:absolute;left:50%;top:45%;font-size:24px;animation:fly .8s ease-out forwards}
+  @keyframes fly{0%{opacity:1;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.2)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo">SCIENCE <span>UP!</span></div><div class="sub">中学理科 / 中1〜高校受験</div></div>
+    <div class="rankpill" id="rankPill">総合 --</div>
+  </div>
+  <div class="screen" id="screen"></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const STORE_KEY='scienceup_v1';
+const OLD_KEYS=['scienceup_tomoaki_v1','sciquest_tomoaki_v1'];
+try{ if(!localStorage.getItem(STORE_KEY)){
+  for(const k of OLD_KEYS){const o=localStorage.getItem(k); if(o){localStorage.setItem(STORE_KEY,o);break;}}
+} }catch(e){}
+let mem=null;
+const FIELDS=[
+  ['phys','物理（光・音・力・電気）'],
+  ['chem','化学（物質・化学変化）'],
+  ['bio','生物（植物・動物・遺伝）'],
+  ['earth','地学（大地・天気・天体）']
+];
+const Q=[
+  {id:'p_e1',f:'phys',lv:'easy',q:'光が鏡ではね返るとき、入射角と反射角の関係はどれか。',ch:['入射角が大きい','反射角が大きい','等しい','光の色による'],a:2,ex:'反射の法則。入射角＝反射角がつねに成り立つ。角度は鏡の面ではなく、面に垂直な線（法線）から測る。'},
+  {id:'p_e2',f:'phys',lv:'easy',q:'光が空気中から水中へ進むとき、境界面で起こる現象はどれか。',ch:['反射のみ','屈折して境界面から遠ざかる','屈折して境界面に近づく（法線に近づく）','まっすぐ進む'],a:2,ex:'空気→水のように光の速さが遅くなる物質へ入ると、光は法線に近づくように曲がる。逆に水→空気では法線から遠ざかる。'},
+  {id:'p_e3',f:'phys',lv:'easy',q:'凸レンズで、焦点距離の2倍の位置に物体を置いたときにできる像はどれか。',ch:['物体と同じ大きさの実像','物体より大きい実像','物体より小さい実像','虚像'],a:0,ex:'2焦点距離の位置では、反対側の2焦点距離の位置に同じ大きさの倒立実像ができる。'},
+  {id:'p_e4',f:'phys',lv:'easy',q:'音の高さを決めるものはどれか。',ch:['振幅','振動数','音源の大きさ','空気の温度'],a:1,ex:'振動数（1秒間の振動回数、単位Hz）が大きいほど高い音になる。振幅は音の大きさを決める。'},
+  {id:'p_e5',f:'phys',lv:'easy',q:'音が伝わらないのはどこか。',ch:['空気中','水中','金属中','真空中'],a:3,ex:'音は物質の振動が伝わる波なので、物質のない真空では伝わらない。光は真空でも伝わる。'},
+  {id:'p_e6',f:'phys',lv:'easy',q:'2力がつり合う条件として正しくないものはどれか。',ch:['大きさが等しい','向きが反対','一直線上にある','同じ向きである'],a:3,ex:'つり合いの3条件は「大きさが等しい」「向きが逆」「同一直線上」。同じ向きでは打ち消し合わない。'},
+  {id:'p_e7',f:'phys',lv:'easy',q:'質量100gの物体にはたらく重力の大きさはおよそ何Nか。',ch:['0.1N','1N','10N','100N'],a:1,ex:'100g＝0.1kgで、重力はおよそ1N。質量1kgあたり約10Nとして計算する。'},
+  {id:'p_e8',f:'phys',lv:'easy',q:'圧力の求め方として正しいものはどれか。',ch:['力÷面積','力×面積','面積÷力','力＋面積'],a:0,ex:'圧力[Pa]＝力[N]÷面積[m2]。同じ力でも接する面積が小さいほど圧力は大きい。'},
+  {id:'p_e9',f:'phys',lv:'easy',q:'回路を流れる電流の大きさを測るとき、電流計のつなぎ方はどれか。',ch:['並列につなぐ','直列につなぐ','どちらでもよい','電源に直接つなぐ'],a:1,ex:'電流計は測りたい部分と直列につなぐ。電圧計は並列につなぐ。'},
+  {id:'p_e10',f:'phys',lv:'easy',q:'オームの法則を表す式はどれか。',ch:['V=IR','V=I÷R','I=VR','R=VI'],a:0,ex:'電圧V[V]＝電流I[A]×抵抗R[Ω]。変形するとI=V/R、R=V/I。'},
+  {id:'p_e11',f:'phys',lv:'easy',q:'直列回路で、各部分を流れる電流について正しいものはどれか。',ch:['分かれるので場所によって違う','どこでも同じ','電源に近いほど大きい','抵抗が大きいほど大きい'],a:1,ex:'直列回路では電流の通り道が1本なので、どこでも電流は同じ。電圧は各抵抗に分かれる。'},
+  {id:'p_e12',f:'phys',lv:'easy',q:'並列回路の全体の抵抗について正しいものはどれか。',ch:['各抵抗の和になる','どの抵抗よりも小さくなる','いちばん大きい抵抗と同じ','抵抗は関係ない'],a:1,ex:'並列では電流の通り道が増えるため、全体の抵抗はどの抵抗よりも小さくなる。'},
+  {id:'p_e13',f:'phys',lv:'easy',q:'電力の単位はどれか。',ch:['J（ジュール）','W（ワット）','A（アンペア）','Ω（オーム）'],a:1,ex:'電力[W]＝電圧[V]×電流[A]。電力量[J]＝電力[W]×時間[s]。'},
+  {id:'p_e14',f:'phys',lv:'easy',q:'磁界の向きを示すのは方位磁針のどちらの極か。',ch:['N極が指す向き','S極が指す向き','どちらでもよい','磁界に向きはない'],a:0,ex:'磁界の向きは、方位磁針のN極が指す向きと決められている。'},
+  {id:'p_s1',f:'phys',lv:'std',q:'物体が等速直線運動をしているとき、その物体にはたらく力はどうなっているか。',ch:['力ははたらいていないか、つり合っている','進む向きに力がはたらき続けている','だんだん大きくなる','重力だけがはたらく'],a:0,ex:'慣性の法則。合力が0のとき、物体は静止し続けるか等速直線運動を続ける。'},
+  {id:'p_s2',f:'phys',lv:'std',q:'斜面を下る台車の速さが一定の割合で増えるのはなぜか。',ch:['重力の斜面方向の分力が一定だから','摩擦力が増えるから','空気の抵抗が減るから','速さに比例して力が増えるから'],a:0,ex:'斜面の傾きが一定なら重力の斜面方向の分力も一定で、一定の割合で速さが増す（等加速度運動）。'},
+  {id:'p_s3',f:'phys',lv:'std',q:'作用・反作用の法則の説明として正しいものはどれか。',ch:['1つの物体にはたらく2力がつり合う','2つの物体が互いに同じ大きさで逆向きの力をおよぼし合う','力は必ず打ち消し合う','大きい物体ほど強い力を出す'],a:1,ex:'作用・反作用は「2つの物体の間」ではたらく。つり合いは「1つの物体にはたらく力」の話で、両者は別物。'},
+  {id:'p_s4',f:'phys',lv:'std',q:'仕事の原理の説明として正しいものはどれか。',ch:['道具を使うと仕事の量が減る','道具を使っても仕事の量は変わらない','道具を使うと仕事が増える','道具では仕事はできない'],a:1,ex:'滑車や斜面を使うと力は小さくできるが、動かす距離が長くなるので仕事[J]＝力×距離は変わらない。'},
+  {id:'p_s5',f:'phys',lv:'std',q:'位置エネルギーの大きさに関係するものの組み合わせはどれか。',ch:['質量と高さ','質量と速さ','高さと速さ','速さのみ'],a:0,ex:'位置エネルギーは質量と基準面からの高さに比例する。運動エネルギーは質量と速さで決まる。'},
+  {id:'p_s6',f:'phys',lv:'std',q:'振り子が最下点を通過するとき、エネルギーはどうなっているか。',ch:['位置エネルギーが最大','運動エネルギーが最大','両方とも0','力学的エネルギーが減る'],a:1,ex:'最下点で高さが最小＝位置エネルギー最小、その分すべて運動エネルギーに変わり最大になる。'},
+  {id:'p_s7',f:'phys',lv:'std',q:'電磁誘導によって電流が流れるのはどんなときか。',ch:['コイルの中の磁界が変化したとき','磁石を近くに置いたままのとき','電池をつないだとき','コイルを温めたとき'],a:0,ex:'磁界が変化することで誘導電流が生じる。磁石を止めたままでは電流は流れない。'},
+  {id:'p_s8',f:'phys',lv:'std',q:'モーターが回る原理として正しいものはどれか。',ch:['磁界の中の電流が力を受けるから','電磁誘導が起こるから','静電気が発生するから','電流が熱に変わるから'],a:0,ex:'磁界の中を流れる電流は力を受ける（フレミング左手の法則）。この力でコイルが回転する。'},
+  {id:'p_s9',f:'phys',lv:'std',q:'直流と交流のちがいとして正しいものはどれか。',ch:['交流は向きと大きさが周期的に変化する','直流のほうが電圧が高い','交流は電流が流れない','直流は電圧が変化する'],a:0,ex:'家庭のコンセントは交流。乾電池は直流。交流は変圧器で電圧を変えやすく、送電に適する。'},
+  {id:'p_s10',f:'phys',lv:'std',q:'水圧について正しいものはどれか。',ch:['深いほど大きく、あらゆる向きにはたらく','深さに関係なく一定','下向きだけにはたらく','浅いほど大きい'],a:0,ex:'水圧は深さに比例して大きくなり、あらゆる向きにはたらく。この差が浮力を生む。'},
+  {id:'p_s11',f:'phys',lv:'std',q:'浮力の大きさは何で決まるか。',ch:['物体の質量','物体が押しのけた液体の重さ','物体の高さ','液体の深さ'],a:1,ex:'アルキメデスの原理。浮力＝押しのけた液体の重さ。深さそのものには関係しない。'},
+  {id:'p_h1',f:'phys',lv:'hard',q:'抵抗10Ωと20Ωを直列につなぎ、全体に6Vの電圧を加えた。10Ωにかかる電圧はいくらか。',ch:['1V','2V','3V','4V'],a:1,ex:'合成抵抗30Ω、電流は6÷30＝0.2A。10Ωの電圧は0.2×10＝2V。直列では抵抗の比で電圧が分かれる。'},
+  {id:'p_h2',f:'phys',lv:'hard',q:'100Wの電熱器を5分間使ったときの電力量は何Jか。',ch:['500J','3000J','30000J','500000J'],a:2,ex:'電力量[J]＝電力[W]×時間[s]。100×300秒＝30000J。分を秒に直すのを忘れやすい。'},
+  {id:'p_h3',f:'phys',lv:'hard',q:'質量2kgの物体を1.5m持ち上げたときの仕事は何Jか（重力は1kgあたり10Nとする）。',ch:['3J','15J','30J','300J'],a:2,ex:'重力は2×10＝20N。仕事＝20N×1.5m＝30J。'},
+  {id:'p_h4',f:'phys',lv:'hard',q:'動滑車を1個使って物体を持ち上げるとき、正しいものはどれか。',ch:['力は半分、引く距離も半分','力は半分、引く距離は2倍','力は2倍、引く距離は半分','力も距離も変わらない'],a:1,ex:'動滑車1個で力は半分になるが、ひもを引く距離は2倍になる。仕事の量は変わらない。'},
+  {id:'p_h5',f:'phys',lv:'hard',q:'ばねに20Nの力を加えると4cm伸びた。30Nでは何cm伸びるか。',ch:['5cm','6cm','8cm','12cm'],a:1,ex:'フックの法則より伸びは力に比例。20N:4cm＝30N:x、x＝6cm。'},
+  {id:'p_h6',f:'phys',lv:'hard',q:'質量の異なる2つの物体を同じ高さから落としたとき、空気の抵抗を無視すると落下のようすはどうなるか。',ch:['重い方が速く落ちる','軽い方が速く落ちる','同じように落ちる','途中で入れかわる'],a:2,ex:'空気の抵抗がなければ質量によらず同じ加速度で落下する。日常で差が出るのは空気の抵抗のため。'},
+  {id:'p_h8',f:'phys',lv:'hard',q:'電熱線の抵抗を2倍にして同じ電圧を加えると、消費電力はどうなるか。',ch:['2倍','4倍','半分','4分の1'],a:2,ex:'P＝V2/R より、電圧一定で抵抗が2倍になると電力は半分になる。'},
+  {id:'c_e1',f:'chem',lv:'easy',q:'物質が状態変化するとき、変化しないものはどれか。',ch:['体積','質量','密度','見た目'],a:1,ex:'状態変化では粒子の集まり方が変わるだけで粒子の数は変わらないので、質量は変化しない。体積は変わる。'},
+  {id:'c_e2',f:'chem',lv:'easy',q:'水が氷になるときの体積はどうなるか。',ch:['増える','減る','変わらない','半分になる'],a:0,ex:'水は例外的に、固体（氷）になると体積が増える。そのため氷は水に浮く。'},
+  {id:'c_e3',f:'chem',lv:'easy',q:'密度の求め方として正しいものはどれか。',ch:['質量÷体積','体積÷質量','質量×体積','質量＋体積'],a:0,ex:'密度[g/cm3]＝質量[g]÷体積[cm3]。物質を見分ける手がかりになる。'},
+  {id:'c_e4',f:'chem',lv:'easy',q:'二酸化炭素の性質として正しいものはどれか。',ch:['石灰水を白くにごらせる','ものを燃やすはたらきがある','空気より軽い','特有の刺激臭がある'],a:0,ex:'二酸化炭素は石灰水を白濁させる。空気より重く、水に少し溶けて酸性を示す。'},
+  {id:'c_e5',f:'chem',lv:'easy',q:'酸素の性質として正しいものはどれか。',ch:['それ自身が燃える','ものを燃やすはたらきがある','水によく溶ける','石灰水を白くにごらせる'],a:1,ex:'酸素自身は燃えないが、他のものが燃えるのを助ける（助燃性）。'},
+  {id:'c_e6',f:'chem',lv:'easy',q:'水にとけている固体を、水を蒸発させずに取り出す方法はどれか。',ch:['ろ過','再結晶','蒸留','燃焼'],a:1,ex:'温度による溶解度の差を利用して結晶として取り出すのが再結晶。ろ過は溶けていない固体を分ける。'},
+  {id:'c_e7',f:'chem',lv:'easy',q:'蒸留で分けられるのはどんな混合物か。',ch:['沸点の違う液体の混合物','色の違う固体','大きさの違う粒','磁石につく金属'],a:0,ex:'蒸留は沸点の差を利用する。水とエタノールの分離が代表例。'},
+  {id:'c_e8',f:'chem',lv:'easy',q:'原子について正しいものはどれか。',ch:['化学変化でそれ以上分けられない','種類によらず質量は同じ','化学変化で別の種類に変わる','必ず2個以上で存在する'],a:0,ex:'原子は化学変化でそれ以上分割できず、種類ごとに質量や大きさが決まっている。'},
+  {id:'c_e9',f:'chem',lv:'easy',q:'水の化学式はどれか。',ch:['H2O','CO2','NaCl','O2'],a:0,ex:'水はH2O。二酸化炭素CO2、塩化ナトリウムNaCl、酸素O2。'},
+  {id:'c_e10',f:'chem',lv:'easy',q:'化学変化の前後で全体の質量が変わらないという法則はどれか。',ch:['質量保存の法則','定比例の法則','オームの法則','慣性の法則'],a:0,ex:'質量保存の法則。原子の組み合わせが変わるだけで原子の種類と数は変わらないため。'},
+  {id:'c_e11',f:'chem',lv:'easy',q:'鉄と硫黄を混ぜて加熱してできる物質はどれか。',ch:['鉄と硫黄の混合物','硫化鉄','酸化鉄','塩化鉄'],a:1,ex:'鉄＋硫黄→硫化鉄（FeS）。もとの鉄とは性質が異なり、磁石につかなくなる。'},
+  {id:'c_e12',f:'chem',lv:'easy',q:'酸化と還元の関係として正しいものはどれか。',ch:['同時に起こる','別々に起こる','酸化だけ起こる','どちらも起こらない'],a:0,ex:'ある物質が酸素を失う（還元）とき、別の物質が酸素を受け取る（酸化）。両者は必ず同時に起こる。'},
+  {id:'c_s1',f:'chem',lv:'std',q:'炭酸水素ナトリウムを加熱すると生じないものはどれか。',ch:['炭酸ナトリウム','二酸化炭素','水','酸素'],a:3,ex:'2NaHCO3→Na2CO3＋CO2＋H2O。酸素は発生しない。'},
+  {id:'c_s2',f:'chem',lv:'std',q:'水の電気分解で、陰極と陽極に発生する気体の体積比はどうなるか。',ch:['水素:酸素＝1:1','水素:酸素＝2:1','水素:酸素＝1:2','水素:酸素＝3:1'],a:1,ex:'2H2O→2H2＋O2。水素が陰極に2、酸素が陽極に1の体積比で発生する。'},
+  {id:'c_s3',f:'chem',lv:'std',q:'銅を加熱して酸化銅にするとき、銅と酸素が結びつく質量比はどれか。',ch:['1:1','2:1','4:1','3:2'],a:2,ex:'銅:酸素＝4:1。マグネシウムの場合は3:2。入試頻出なので数値を覚える。'},
+  {id:'c_s4',f:'chem',lv:'std',q:'電解質の水溶液に電流が流れる理由はどれか。',ch:['水が電気を通すから','溶けてイオンに分かれているから','分子のまま動くから','温度が高いから'],a:1,ex:'電解質は水に溶けると陽イオンと陰イオンに電離し、これらが移動することで電流が流れる。'},
+  {id:'c_s5',f:'chem',lv:'std',q:'塩酸に含まれる陽イオンはどれか。',ch:['水素イオン','塩化物イオン','ナトリウムイオン','水酸化物イオン'],a:0,ex:'HCl→H+ ＋ Cl-。酸の性質は水素イオンH+によるもの。'},
+  {id:'c_s6',f:'chem',lv:'std',q:'アルカリ性の水溶液に共通して含まれるイオンはどれか。',ch:['水素イオン','水酸化物イオン','塩化物イオン','ナトリウムイオン'],a:1,ex:'アルカリは水に溶けて水酸化物イオンOH-を生じる物質。'},
+  {id:'c_s7',f:'chem',lv:'std',q:'中和反応で必ずできるものはどれか。',ch:['水','気体','沈殿','金属'],a:0,ex:'H+ ＋ OH- → H2O。水は必ずできるが、塩は種類により沈殿することも溶けたままのこともある。'},
+  {id:'c_s8',f:'chem',lv:'std',q:'BTB溶液が黄色を示すのはどんな水溶液か。',ch:['酸性','中性','アルカリ性','どれでもない'],a:0,ex:'BTBは酸性で黄、中性で緑、アルカリ性で青。'},
+  {id:'c_s9',f:'chem',lv:'std',q:'金属のイオンへのなりやすさ（イオン化傾向）が大きいものはどれか。',ch:['銅','銀','マグネシウム','金'],a:2,ex:'マグネシウム＞亜鉛＞鉄＞銅＞銀の順。イオンになりやすい金属ほど電池の負極になりやすい。'},
+  {id:'c_s10',f:'chem',lv:'std',q:'ダニエル電池で亜鉛板が果たす役割はどれか。',ch:['正極','負極','電解質','絶縁体'],a:1,ex:'イオン化傾向の大きい亜鉛が電子を放って溶け出し、負極になる。銅板が正極。'},
+  {id:'c_s11',f:'chem',lv:'std',q:'質量パーセント濃度10%の食塩水200gに含まれる食塩は何gか。',ch:['10g','20g','30g','40g'],a:1,ex:'200×0.10＝20g。濃度＝溶質の質量÷水溶液全体の質量×100。'},
+  {id:'c_h1',f:'chem',lv:'hard',q:'マグネシウム3.0gを完全に酸化させると酸化マグネシウムは何gできるか（Mg:O＝3:2）。',ch:['4.0g','4.5g','5.0g','6.0g'],a:2,ex:'Mg3.0gに結びつく酸素は2.0g。よって3.0＋2.0＝5.0g。'},
+  {id:'c_h2',f:'chem',lv:'hard',q:'銅8.0gを加熱して完全に酸化させたときにできる酸化銅は何gか（Cu:O＝4:1）。',ch:['9.0g','10.0g','12.0g','16.0g'],a:1,ex:'銅8.0gに結びつく酸素は2.0g。8.0＋2.0＝10.0g。'},
+  {id:'c_h3',f:'chem',lv:'hard',q:'うすい塩酸に石灰石を入れると気体が発生した。この気体を集めるのに適した方法はどれか。',ch:['水上置換法','上方置換法','下方置換法','どれでもよい'],a:2,ex:'発生するのは二酸化炭素で、水に少し溶け空気より重い。下方置換が適する（純粋に集めるなら水上置換も可）。'},
+  {id:'c_h4',f:'chem',lv:'hard',q:'化学反応式 2H2＋O2→2H2O が示していることとして正しいものはどれか。',ch:['水素2gと酸素1gが反応する','水素分子2個と酸素分子1個から水分子2個ができる','水素原子2個が反応する','体積が半分になる'],a:1,ex:'係数は分子の個数の比を表す。質量比ではない点に注意。'},
+  {id:'c_h5',f:'chem',lv:'hard',q:'塩酸に水酸化ナトリウム水溶液を加えて完全に中和したとき、水溶液を蒸発させると残る物質はどれか。',ch:['水酸化ナトリウム','塩化ナトリウム','塩酸','何も残らない'],a:1,ex:'HCl＋NaOH→NaCl＋H2O。塩化ナトリウムが塩として残る。'},
+  {id:'c_h6',f:'chem',lv:'hard',q:'塩化銅水溶液を電気分解したとき、陰極で起こることはどれか。',ch:['塩素が発生する','銅が付着する','水素が発生する','酸素が発生する'],a:1,ex:'陽イオンである銅イオンCu2+が陰極で電子を受け取り、銅として付着する。陽極では塩素が発生。'},
+  {id:'c_h7',f:'chem',lv:'hard',q:'溶解度が60℃で110g、20℃で32g（水100gあたり）の物質を、60℃の飽和水溶液210gから20℃に冷やすと何gの結晶が出るか。',ch:['32g','60g','78g','110g'],a:2,ex:'60℃で水100gに110g溶けて計210g。20℃では32gしか溶けないので、110－32＝78gが析出する。'},
+  {id:'b_e1',f:'bio',lv:'easy',q:'植物が光合成を行うのに必要ないものはどれか。',ch:['光','二酸化炭素','水','酸素'],a:3,ex:'光合成は光・水・二酸化炭素からデンプンと酸素をつくる。酸素は原料ではなく生成物。'},
+  {id:'b_e2',f:'bio',lv:'easy',q:'光合成が行われる細胞の部分はどこか。',ch:['核','葉緑体','液胞','細胞壁'],a:1,ex:'葉緑体に含まれる緑色の色素クロロフィルが光を吸収する。'},
+  {id:'b_e3',f:'bio',lv:'easy',q:'葉の裏に多くあり、気体の出入り口となるものはどれか。',ch:['気孔','道管','師管','葉緑体'],a:0,ex:'2つの孔辺細胞にはさまれたすきまが気孔。蒸散もここで行われる。'},
+  {id:'b_e4',f:'bio',lv:'easy',q:'根から吸い上げた水が通る管はどれか。',ch:['道管','師管','形成層','気孔'],a:0,ex:'道管は水と養分（無機物）を運ぶ。師管は葉でできた栄養分を運ぶ。'},
+  {id:'b_e5',f:'bio',lv:'easy',q:'被子植物と裸子植物のちがいとして正しいものはどれか。',ch:['胚珠が子房に包まれているかどうか','花が咲くかどうか','種子をつくるかどうか','葉があるかどうか'],a:0,ex:'被子植物は胚珠が子房の中にある。裸子植物（マツなど）は胚珠がむき出し。'},
+  {id:'b_e6',f:'bio',lv:'easy',q:'単子葉類の特徴として正しいものはどれか。',ch:['葉脈が網目状','根が主根と側根','子葉が1枚','維管束が輪状に並ぶ'],a:2,ex:'単子葉類は子葉1枚、平行脈、ひげ根、維管束が散在。双子葉類はその逆。'},
+  {id:'b_e7',f:'bio',lv:'easy',q:'細胞のつくりで、植物細胞にあって動物細胞にないものはどれか。',ch:['核','細胞膜','細胞壁','細胞質'],a:2,ex:'細胞壁・葉緑体・発達した液胞は植物細胞の特徴。'},
+  {id:'b_e8',f:'bio',lv:'easy',q:'ヒトの消化液のうち、デンプンを分解するものはどれか。',ch:['だ液','胃液','胆汁','なし'],a:0,ex:'だ液に含まれるアミラーゼがデンプンを麦芽糖に分解する。胃液のペプシンはタンパク質を分解。'},
+  {id:'b_e9',f:'bio',lv:'easy',q:'小腸の内側にある、養分を吸収するつくりはどれか。',ch:['柔毛','肺胞','じん臓','ぼうこう'],a:0,ex:'柔毛によって表面積が大きくなり、効率よく養分を吸収できる。'},
+  {id:'b_e10',f:'bio',lv:'easy',q:'肺で酸素と二酸化炭素の交換が行われる部分はどれか。',ch:['気管','気管支','肺胞','横隔膜'],a:2,ex:'肺胞は毛細血管に囲まれた小さな袋で、ここでガス交換が起こる。'},
+  {id:'b_e11',f:'bio',lv:'easy',q:'心臓から送り出される血液が通る血管はどれか。',ch:['動脈','静脈','毛細血管','リンパ管'],a:0,ex:'心臓から出るのが動脈、心臓へもどるのが静脈。血液の種類（動脈血・静脈血）とは別の分類。'},
+  {id:'b_e12',f:'bio',lv:'easy',q:'刺激に対して意識とは無関係に起こる反応を何というか。',ch:['反射','随意運動','condition','反応時間'],a:0,ex:'反射は脳を経由せず脊髄などで命令が出るため、反応がきわめて速い。'},
+  {id:'b_s1',f:'bio',lv:'std',q:'だ液のはたらきを調べる実験で、対照実験として用意すべきものはどれか。',ch:['だ液のかわりに水を入れたもの','だ液を2倍にしたもの','温度を変えたもの','試験管を大きくしたもの'],a:0,ex:'調べたい条件（だ液の有無）だけを変え、他は同じにするのが対照実験の原則。'},
+  {id:'b_s2',f:'bio',lv:'std',q:'ヨウ素液とベネジクト液の反応の組み合わせとして正しいものはどれか。',ch:['ヨウ素液は糖に反応する','ベネジクト液はデンプンに反応する','ヨウ素液はデンプンで青紫色になる','どちらも同じ反応をする'],a:2,ex:'ヨウ素液はデンプンで青紫色。ベネジクト液は糖と加熱で赤褐色の沈殿。'},
+  {id:'b_s3',f:'bio',lv:'std',q:'細胞分裂のときに見られる、ひも状のつくりはどれか。',ch:['染色体','葉緑体','液胞','細胞壁'],a:0,ex:'核の中の染色体が複製されて2つに分かれ、同じ遺伝情報をもつ2個の細胞ができる。'},
+  {id:'b_s4',f:'bio',lv:'std',q:'減数分裂によってできる生殖細胞の染色体の数は、体細胞と比べてどうなるか。',ch:['同じ','半分','2倍','4分の1'],a:1,ex:'半分になる。受精によってもとの数にもどるため、世代を重ねても数が保たれる。'},
+  {id:'b_s5',f:'bio',lv:'std',q:'無性生殖でできた子の遺伝子について正しいものはどれか。',ch:['親と同じ','親の半分','両親の混合','ランダムに決まる'],a:0,ex:'無性生殖では体細胞分裂で増えるため、子は親と同じ遺伝子をもつ（クローン）。'},
+  {id:'b_s6',f:'bio',lv:'std',q:'丸い種子（AA）としわの種子（aa）をかけ合わせたとき、子（F1）の形質はどうなるか。',ch:['すべて丸','すべてしわ','丸:しわ＝1:1','丸:しわ＝3:1'],a:0,ex:'子はすべてAaとなり、顕性形質である丸が現れる。'},
+  {id:'b_s7',f:'bio',lv:'std',q:'子（Aa）どうしをかけ合わせたときの孫の形質の比はどうなるか。',ch:['1:1','2:1','3:1','9:3:3:1'],a:2,ex:'AA:Aa:aa＝1:2:1となり、表現型は顕性:潜性＝3:1。'},
+  {id:'b_s8',f:'bio',lv:'std',q:'食物連鎖において、生産者にあたるものはどれか。',ch:['植物','草食動物','肉食動物','菌類'],a:0,ex:'光合成で有機物をつくる植物が生産者。動物は消費者、菌類・細菌類は分解者。'},
+  {id:'b_s9',f:'bio',lv:'std',q:'生態系で数量のつり合いが保たれているとき、生物の数の関係として正しいものはどれか。',ch:['草食動物が最も多い','肉食動物が最も多い','植物が最も多い','すべて同じ'],a:2,ex:'生産者である植物が最も多く、上位の消費者ほど少なくなるピラミッド型になる。'},
+  {id:'b_s10',f:'bio',lv:'std',q:'刺激を受けてから反射が起こるまでの信号の経路として正しいものはどれか。',ch:['感覚器官→脊髄→運動器官','感覚器官→脳→運動器官','感覚器官→運動器官','脳→脊髄→感覚器官'],a:0,ex:'反射では脊髄などで命令が出るため脳を経由せず、反応が速い。'},
+  {id:'b_s11',f:'bio',lv:'std',q:'だ液せんや肝臓のように、はたらきの異なる細胞が集まって特定の役割を果たすものを何というか。',ch:['細胞','組織','器官','個体'],a:2,ex:'細胞→組織→器官→個体の順に構成されていく。'},
+  {id:'b_h1',f:'bio',lv:'hard',q:'蒸散量を調べる実験で、葉の裏にワセリンを塗った枝の水の減少が最も少なかった。この結果から言えることはどれか。',ch:['蒸散は葉の表で多い','蒸散は葉の裏で多い','蒸散は茎で起こる','蒸散は起こらない'],a:1,ex:'裏をふさぐと減少量が最も小さい＝ふさいだ部分の蒸散が多かったことになる。気孔は葉の裏に多い。'},
+  {id:'b_h2',f:'bio',lv:'hard',q:'光合成と呼吸について、昼間の植物で正しいものはどれか。',ch:['光合成だけ行う','呼吸だけ行う','両方行い、光合成の量が多い','両方行い、呼吸の量が多い'],a:2,ex:'植物は一日中呼吸している。昼は光合成量が呼吸量を上回るため、見かけ上は二酸化炭素を吸収する。'},
+  {id:'b_h3',f:'bio',lv:'hard',q:'エンドウの丸い種子（Aa）と、しわの種子（aa）をかけ合わせたときの子の比はどれか。',ch:['すべて丸','丸:しわ＝1:1','丸:しわ＝3:1','すべてしわ'],a:1,ex:'Aa×aa→Aa:aa＝1:1。検定交雑と呼ばれ、遺伝子型を調べるのに使う。'},
+  {id:'b_h4',f:'bio',lv:'hard',q:'血液の成分のうち、二酸化炭素を主に運ぶものはどれか。',ch:['赤血球','白血球','血小板','血しょう'],a:3,ex:'酸素はヘモグロビン（赤血球）が運ぶが、二酸化炭素は主に血しょうに溶けて運ばれる。'},
+  {id:'b_h5',f:'bio',lv:'hard',q:'じん臓のはたらきとして正しいものはどれか。',ch:['尿素をつくる','血液中の不要物をこしとる','養分を吸収する','胆汁をつくる'],a:1,ex:'尿素をつくるのは肝臓。じん臓はそれを血液からこしとって尿にする。'},
+  {id:'b_h6',f:'bio',lv:'hard',q:'セキツイ動物のうち、体温が外界の温度によって変わるのはどれか。',ch:['ホニュウ類','鳥類','ハチュウ類','どれも変わらない'],a:2,ex:'ハチュウ類・両生類・魚類は変温動物。ホニュウ類と鳥類は恒温動物。'},
+  {id:'b_h7',f:'bio',lv:'hard',q:'化石として見つかったシソチョウが、進化の証拠とされる理由はどれか。',ch:['ハチュウ類と鳥類の両方の特徴をもつから','最も古い化石だから','現在も生きているから','大型だったから'],a:0,ex:'翼や羽毛（鳥類の特徴）と歯や爪（ハチュウ類の特徴）を併せもつ。'},
+  {id:'e_e1',f:'earth',lv:'easy',q:'火成岩のうち、マグマが地表付近で急に冷えてできた岩石はどれか。',ch:['深成岩','火山岩','堆積岩','変成岩'],a:1,ex:'火山岩は急冷のため斑状組織になる。深成岩はゆっくり冷えて等粒状組織。'},
+  {id:'e_e2',f:'earth',lv:'easy',q:'ねばりけの強いマグマがつくる火山の形はどれか。',ch:['傾斜のゆるい形','ドーム状の盛り上がった形','平らな形','くぼんだ形'],a:1,ex:'ねばりけが強いと流れにくくドーム状に盛り上がり、噴火は激しくなる。溶岩の色も白っぽい。'},
+  {id:'e_e3',f:'earth',lv:'easy',q:'地震のゆれのうち、はじめに来る小さなゆれを何というか。',ch:['主要動','初期微動','余震','前震'],a:1,ex:'速いP波による初期微動のあと、遅いS波による主要動が来る。'},
+  {id:'e_e4',f:'earth',lv:'easy',q:'地震の規模の大きさを表すものはどれか。',ch:['震度','マグニチュード','震源距離','震央'],a:1,ex:'マグニチュードは地震そのものの規模。震度は各地点でのゆれの大きさ。'},
+  {id:'e_e5',f:'earth',lv:'easy',q:'れき・砂・泥のうち、河口から最も遠くまで運ばれて堆積するものはどれか。',ch:['れき','砂','泥','同時に堆積する'],a:2,ex:'粒が小さいほど遠くまで運ばれる。海岸近くにれき、沖に泥が堆積する。'},
+  {id:'e_e6',f:'earth',lv:'easy',q:'示相化石からわかることはどれか。',ch:['地層ができた年代','地層ができた当時の環境','地層の厚さ','地層の傾き'],a:1,ex:'サンゴ（あたたかく浅い海）などが示相化石。年代がわかるのは示準化石。'},
+  {id:'e_e7',f:'earth',lv:'easy',q:'空気中の水蒸気が凝結し始める温度を何というか。',ch:['沸点','露点','融点','気温'],a:1,ex:'露点に達すると水蒸気が水滴になり始める。湿度が高いほど露点は気温に近い。'},
+  {id:'e_e8',f:'earth',lv:'easy',q:'低気圧の中心付近での空気の動きとして正しいものはどれか。',ch:['下降気流で晴れやすい','上昇気流でくもりや雨になりやすい','風がふかない','気温が下がる'],a:1,ex:'低気圧は上昇気流を生み雲ができやすい。高気圧は下降気流で晴れやすい。'},
+  {id:'e_e9',f:'earth',lv:'easy',q:'日本の冬に発達し、北西の季節風をもたらす気団はどれか。',ch:['シベリア気団','小笠原気団','オホーツク海気団','赤道気団'],a:0,ex:'冬はシベリア気団（寒冷・乾燥）が発達し、西高東低の気圧配置になる。'},
+  {id:'e_e10',f:'earth',lv:'easy',q:'太陽が真南に来ることを何というか。',ch:['日周運動','南中','年周運動','日食'],a:1,ex:'南中したときの高度を南中高度という。南中時刻は経度によってずれる。'},
+  {id:'e_e11',f:'earth',lv:'easy',q:'星が1日に東から西へ動いて見えるのはなぜか。',ch:['地球の公転','地球の自転','星の移動','月の動き'],a:1,ex:'地球が西から東へ自転しているため、星は逆向きに動いて見える（日周運動）。'},
+  {id:'e_e12',f:'earth',lv:'easy',q:'日本で季節が生じる主な原因はどれか。',ch:['地軸が傾いたまま公転しているから','太陽との距離が変わるから','自転の速さが変わるから','大気の量が変わるから'],a:0,ex:'地軸が約23.4度傾いたまま公転するため、季節で太陽高度と昼の長さが変わる。'},
+  {id:'e_s1',f:'earth',lv:'std',q:'P波の速さが6km/s、S波が4km/sのとき、震源から120km地点の初期微動継続時間は何秒か。',ch:['5秒','10秒','15秒','20秒'],a:1,ex:'P波は20秒、S波は30秒で到達。差の10秒が初期微動継続時間。距離に比例して長くなる。'},
+  {id:'e_s2',f:'earth',lv:'std',q:'プレートの境界で日本付近に多い地震が起こる理由はどれか。',ch:['海洋プレートが大陸プレートの下に沈み込むから','プレートが離れていくから','プレートが動かないから','火山がないから'],a:0,ex:'沈み込みでひずみが蓄積し、跳ね上がることで海溝型地震が起こる。'},
+  {id:'e_s3',f:'earth',lv:'std',q:'しゅう曲と断層のちがいとして正しいものはどれか。',ch:['しゅう曲は地層が波打ち、断層はずれる','どちらも同じ','しゅう曲は火山活動','断層は堆積作用'],a:0,ex:'大きな力を受けて、地層が曲がるのがしゅう曲、割れてずれるのが断層。'},
+  {id:'e_s4',f:'earth',lv:'std',q:'飽和水蒸気量が17g/m3のとき、空気中に8.5g/m3の水蒸気がある。湿度は何%か。',ch:['25%','50%','75%','85%'],a:1,ex:'湿度＝実際の水蒸気量÷飽和水蒸気量×100＝8.5÷17×100＝50%。'},
+  {id:'e_s5',f:'earth',lv:'std',q:'寒冷前線が通過した後の天気の変化として正しいものはどれか。',ch:['気温が上がり南寄りの風','気温が下がり北寄りの風','変化しない','雨が長く続く'],a:1,ex:'寒冷前線通過後は寒気に入るため気温が下がり、風向が北寄りに変わる。短時間の強い雨が特徴。'},
+  {id:'e_s6',f:'earth',lv:'std',q:'温暖前線付近にできやすい雲と雨の特徴はどれか.',ch:['積乱雲・短時間の強い雨','乱層雲・広い範囲の弱い雨','巻雲・雨なし','積雲・にわか雨'],a:1,ex:'温暖前線は暖気がゆるやかに這い上がるため、乱層雲による広範囲の弱い雨が長く続く。'},
+  {id:'e_s7',f:'earth',lv:'std',q:'日本の夏に発達し、蒸し暑い天気をもたらす気団はどれか。',ch:['シベリア気団','小笠原気団','オホーツク海気団','揚子江気団'],a:1,ex:'小笠原気団（高温・多湿）が張り出し、南高北低の気圧配置になる。'},
+  {id:'e_s8',f:'earth',lv:'std',q:'金星が真夜中に見えない理由はどれか。',ch:['地球より内側を公転しているから','自転が遅いから','光を出さないから','地球から遠いから'],a:0,ex:'内惑星は太陽の近くにしか見えないため、明け方か夕方にしか観測できない。'},
+  {id:'e_s9',f:'earth',lv:'std',q:'月食が起こるときの並び方として正しいものはどれか。',ch:['太陽－月－地球','太陽－地球－月','月－太陽－地球','地球－太陽－月'],a:1,ex:'月が地球の影に入るのが月食。太陽－月－地球の並びは日食。'},
+  {id:'e_s10',f:'earth',lv:'std',q:'同じ時刻に見える星座が1か月に約30度ずつ西へ移動するのはなぜか。',ch:['地球の自転','地球の公転','星座の移動','月の公転'],a:1,ex:'地球の公転による年周運動。1年で360度なので、1か月では約30度動いて見える。'},
+  {id:'e_s11',f:'earth',lv:'std',q:'日本で夏至の日の南中高度が最も高くなる理由はどれか.',ch:['地軸の北極側が太陽の方向に傾くから','地球が太陽に最も近づくから','自転が速くなるから','大気が薄くなるから'],a:0,ex:'夏至には北半球が太陽側に傾くため、南中高度が高く昼が長くなる。'},
+  {id:'e_h1',f:'earth',lv:'hard',q:'地震のゆれが震源から等速で伝わるとして、震源距離80kmでP波が10秒後、160kmで20秒後に到達した。P波の速さは何km/sか。',ch:['4km/s','6km/s','8km/s','16km/s'],a:2,ex:'80km÷10秒＝8km/s。160km÷20秒でも8km/sで一致する。'},
+  {id:'e_h2',f:'earth',lv:'hard',q:'ある地点の標高と地層の重なりから、地層の傾きを調べる方法として正しいものはどれか.',ch:['柱状図を並べて同じ層の標高を比べる','岩石の色を比べる','化石の数を数える','厚さの合計を比べる'],a:0,ex:'複数地点の柱状図で、かぎ層（凝灰岩層など）の標高を比較すると傾きがわかる。'},
+  {id:'e_h3',f:'earth',lv:'hard',q:'気温30℃（飽和水蒸気量30.4g/m3）で湿度50%の空気を冷やしたとき、露点に最も近い温度はどれか。',ch:['約10℃','約15℃','約19℃','約25℃'],a:2,ex:'水蒸気量は15.2g/m3。飽和水蒸気量が約15gになるのは19℃前後。'},
+  {id:'e_h4',f:'earth',lv:'hard',q:'冬の日本海側で雪が多くなる理由として正しいものはどれか。',ch:['季節風が日本海で水蒸気を含み、山にぶつかって上昇するから','低気圧が停滞するから','気温が高いから','海流が暖かいから'],a:0,ex:'シベリアからの乾いた季節風が日本海で水蒸気を得て、山脈で上昇し雪を降らせる。太平洋側は乾燥する。'},
+  {id:'e_h5',f:'earth',lv:'hard',q:'北緯35度の地点における夏至の南中高度はおよそ何度か。',ch:['約31.6度','約55度','約78.4度','約90度'],a:2,ex:'南中高度＝90－緯度＋23.4＝90－35＋23.4＝78.4度。'},
+  {id:'e_h6',f:'earth',lv:'hard',q:'太陽の黒点が移動して見えることからわかることはどれか。',ch:['太陽が自転していること','太陽が公転していること','地球が自転していること','黒点が動く天体であること'],a:0,ex:'黒点の位置が日ごとに移動し、周辺部で形がゆがむことから、太陽が自転する球体だとわかる。'},
+  {id:'e_h7',f:'earth',lv:'hard',q:'火山灰に含まれる鉱物を調べたところ、無色鉱物が多かった。このマグマの性質はどれか。',ch:['ねばりけが弱く黒っぽい','ねばりけが強く白っぽい','温度が高く流れやすい','鉄を多く含む'],a:1,ex:'セキエイ・チョウ石などの無色鉱物が多いと白っぽく、ねばりけの強いマグマ（流紋岩質）である。'},
+  {id:'p_e15',f:'phys',lv:'easy',q:'光の直進によって起こる現象はどれか。',ch:['影ができる','虹ができる','鏡に映る','水中で曲がって見える'],a:0,ex:'影は光が直進し、物体にさえぎられてできる。虹は屈折と分散、鏡は反射による。'},
+  {id:'p_e16',f:'phys',lv:'easy',q:'全反射が起こるのはどんなときか。',ch:['空気中から水中へ入るとき','水中から空気中へ入り、入射角が大きいとき','鏡に当たったとき','光が弱いとき'],a:1,ex:'光が水やガラスから空気へ出るとき、入射角が臨界角を超えると屈折せずすべて反射する。光ファイバーの原理。'},
+  {id:'p_e17',f:'phys',lv:'easy',q:'弦をはじいたとき、音を高くする方法として正しくないものはどれか。',ch:['弦を短くする','弦を強く張る','弦を細くする','弦を強くはじく'],a:3,ex:'強くはじくと振幅が大きくなり音が大きくなるが、高さ（振動数）は変わらない。'},
+  {id:'p_e18',f:'phys',lv:'easy',q:'力の3要素に含まれないものはどれか。',ch:['力の大きさ','力の向き','作用点','力の速さ'],a:3,ex:'力は大きさ・向き・作用点の3つで表され、矢印で図示する。'},
+  {id:'p_e19',f:'phys',lv:'easy',q:'摩擦力の向きとして正しいものはどれか。',ch:['動く向きと同じ','動く向きと逆','上向き','下向き'],a:1,ex:'摩擦力は物体の運動をさまたげる向き、つまり動こうとする向きと逆にはたらく。'},
+  {id:'p_e20',f:'phys',lv:'easy',q:'電流の単位と、電圧の単位の組み合わせとして正しいものはどれか。',ch:['A と V','V と A','W と J','Ω と A'],a:0,ex:'電流はアンペア[A]、電圧はボルト[V]、抵抗はオーム[Ω]。'},
+  {id:'p_s12',f:'phys',lv:'std',q:'抵抗の大きい電熱線と小さい電熱線を直列につないだとき、発熱量が大きいのはどちらか。',ch:['抵抗の大きい方','抵抗の小さい方','同じ','電圧による'],a:0,ex:'直列では電流が同じなので、発熱量Q＝I2Rより抵抗が大きいほど発熱量も大きい。'},
+  {id:'p_s13',f:'phys',lv:'std',q:'並列につないだ2つの電熱線で、発熱量が大きいのはどちらか。',ch:['抵抗の大きい方','抵抗の小さい方','同じ','電流による'],a:1,ex:'並列では電圧が同じなので、Q＝V2/Rより抵抗が小さいほど発熱量が大きい。直列と逆になる点が要注意。'},
+  {id:'p_s14',f:'phys',lv:'std',q:'静電気で、同じ種類の電気を帯びた物体どうしはどうなるか。',ch:['引き合う','しりぞけ合う','変化しない','くっついて離れない'],a:1,ex:'同種の電気は反発、異種の電気は引き合う。'},
+  {id:'p_s15',f:'phys',lv:'std',q:'真空放電で、-極から+極へ流れる粒子の流れを何というか。',ch:['陽子線','陰極線（電子の流れ）','X線','放射線'],a:1,ex:'陰極線の正体は電子の流れ。電流の向きは電子の流れと逆と定められている。'},
+  {id:'p_s16',f:'phys',lv:'std',q:'斜面の角度を大きくすると、台車の速さの増え方はどうなるか。',ch:['変わらない','大きくなる','小さくなる','一定になる'],a:1,ex:'斜面方向の重力の分力が大きくなるため、速さの増え方（加速度）も大きくなる。'},
+  {id:'p_s17',f:'phys',lv:'std',q:'エネルギーの移り変わりで、力学的エネルギーが保存されないのはどんなときか。',ch:['摩擦や空気の抵抗があるとき','高さが変わるとき','速さが変わるとき','質量が大きいとき'],a:0,ex:'摩擦などがあると力学的エネルギーの一部が熱エネルギーに変わり、保存されない。'},
+  {id:'p_h9',f:'phys',lv:'hard',q:'壁に向かって声を出したところ、2秒後にやまびこが聞こえた。音速を340m/sとすると壁までの距離は何mか。',ch:['170m','340m','680m','1360m'],a:1,ex:'音は往復で680m進む。片道はその半分の340m。'},
+  {id:'p_h10',f:'phys',lv:'hard',q:'電圧6V、抵抗3Ωの回路に流れる電流と消費電力の組み合わせはどれか。',ch:['2A・12W','2A・6W','3A・18W','0.5A・3W'],a:0,ex:'I＝V/R＝6/3＝2A。P＝VI＝6×2＝12W。'},
+  {id:'p_h11',f:'phys',lv:'hard',q:'30Ωと60Ωの抵抗を並列につないだときの合成抵抗はいくらか。',ch:['15Ω','20Ω','45Ω','90Ω'],a:1,ex:'1/R＝1/30＋1/60＝3/60より R＝20Ω。並列は必ずどの抵抗より小さくなる。'},
+  {id:'p_h12',f:'phys',lv:'hard',q:'質量5kgの物体を、動滑車1個を使って2m持ち上げた。ひもを引く力と引く長さの組み合わせはどれか（1kgあたり10N）。',ch:['50N・2m','25N・4m','25N・2m','100N・1m'],a:1,ex:'重力50N。動滑車で力は半分の25N、引く長さは2倍の4m。仕事は100Jで変わらない。'},
+  {id:'c_e13',f:'chem',lv:'easy',q:'有機物に共通する性質はどれか。',ch:['燃えると二酸化炭素が出る','磁石につく','電気を通す','水に必ず溶ける'],a:0,ex:'有機物は炭素を含み、燃やすと二酸化炭素と水ができる。砂糖やプラスチックが例。'},
+  {id:'c_e14',f:'chem',lv:'easy',q:'金属に共通する性質として正しくないものはどれか。',ch:['電気をよく通す','熱をよく伝える','みがくと光る','磁石につく'],a:3,ex:'磁石につくのは鉄・ニッケル・コバルトなど一部だけ。金属共通の性質ではない。'},
+  {id:'c_e15',f:'chem',lv:'easy',q:'水素の性質として正しいものはどれか。',ch:['空気中で燃えて水ができる','石灰水を白くする','空気より重い','水によく溶ける'],a:0,ex:'水素は最も軽い気体で、燃えると水になる。爆発的に燃えるため火気に注意。'},
+  {id:'c_e16',f:'chem',lv:'easy',q:'アンモニアの集め方として適切なものはどれか。',ch:['水上置換法','上方置換法','下方置換法','どれでもよい'],a:1,ex:'アンモニアは水に非常によく溶け空気より軽いため、上方置換法で集める。'},
+  {id:'c_e17',f:'chem',lv:'easy',q:'ろ過をするときの注意として正しいものはどれか。',ch:['ろうとのあしをビーカーの壁につける','液を一気に注ぐ','ろ紙を折らずに使う','ガラス棒を使わない'],a:0,ex:'ろうとのあしの長い方を壁につけ、ガラス棒を伝わらせて静かに注ぐ。'},
+  {id:'c_e18',f:'chem',lv:'easy',q:'単体と化合物のちがいとして正しいものはどれか。',ch:['単体は1種類の原子からできている','単体は必ず気体','化合物は混合物と同じ','化合物は分解できない'],a:0,ex:'単体は1種類の元素からなる物質（O2、Feなど）。化合物は2種類以上（H2O、CO2など）。'},
+  {id:'c_s12',f:'chem',lv:'std',q:'酸化銀を加熱したときに起こる変化はどれか。',ch:['分解して銀と酸素になる','酸化されて質量が増える','何も起こらない','水ができる'],a:0,ex:'2Ag2O→4Ag＋O2。加熱による分解（熱分解）で、白色の銀が残る。'},
+  {id:'c_s13',f:'chem',lv:'std',q:'鉄と硫黄の混合物を加熱した後の物質に塩酸を加えると発生する気体はどれか。',ch:['水素','硫化水素','二酸化炭素','酸素'],a:1,ex:'硫化鉄＋塩酸→硫化水素（卵の腐ったにおい）。加熱前の鉄なら水素が発生する。'},
+  {id:'c_s14',f:'chem',lv:'std',q:'化学式CuOが表す物質はどれか。',ch:['銅','酸化銅','水酸化銅','硫化銅'],a:1,ex:'Cuは銅、Oは酸素。CuOは酸化銅（黒色）。'},
+  {id:'c_s15',f:'chem',lv:'std',q:'電離を表す式として正しいものはどれか。',ch:['NaCl→Na+ ＋ Cl-','NaCl→Na ＋ Cl','H2O→H2 ＋ O','CO2→C ＋ O2'],a:0,ex:'電離は水に溶けて陽イオンと陰イオンに分かれること。電気分解の式とは区別する。'},
+  {id:'c_s16',f:'chem',lv:'std',q:'pHの値について正しいものはどれか。',ch:['7より小さいと酸性','7より小さいとアルカリ性','7が酸性','数値が大きいほど酸性が強い'],a:0,ex:'pH7が中性、7未満が酸性、7より大きいとアルカリ性。'},
+  {id:'c_s17',f:'chem',lv:'std',q:'うすい塩酸に亜鉛を入れたときに発生する気体はどれか。',ch:['酸素','水素','二酸化炭素','窒素'],a:1,ex:'金属＋酸→水素。イオン化傾向が水素より大きい金属で起こる。'},
+  {id:'c_s18',f:'chem',lv:'std',q:'ダニエル電池でセロハンを使う理由はどれか。',ch:['2つの水溶液が混ざるのを防ぎつつイオンを通すため','電気を通さないため','水を通さないため','電圧を上げるため'],a:0,ex:'セロハンは液が混ざるのを防ぎながらイオンだけを通し、電流が流れ続けるようにする。'},
+  {id:'c_h8',f:'chem',lv:'hard',q:'水20gに食塩5gを溶かした水溶液の質量パーセント濃度は何%か。',ch:['20%','25%','5%','80%'],a:0,ex:'水溶液全体は25g。5÷25×100＝20%。分母を水ではなく全体にする点が要注意。'},
+  {id:'c_h9',f:'chem',lv:'hard',q:'酸化銅と炭素粉末を混ぜて加熱したとき、還元されるのはどちらか。',ch:['酸化銅','炭素','どちらも','どちらでもない'],a:0,ex:'酸化銅が酸素をうばわれて銅になる（還元）。炭素は酸素と結びつき二酸化炭素になる（酸化）。'},
+  {id:'c_h10',f:'chem',lv:'hard',q:'うすい塩酸10cm3を中和するのに水酸化ナトリウム水溶液8cm3が必要だった。塩酸15cm3を中和するには何cm3必要か。',ch:['10cm3','12cm3','16cm3','20cm3'],a:1,ex:'比例関係より8×(15/10)＝12cm3。'},
+  {id:'c_h11',f:'chem',lv:'hard',q:'質量保存の法則を確かめる実験で、密閉容器を使う理由はどれか。',ch:['気体が逃げるのを防ぐため','温度を保つため','光を防ぐため','反応を速くするため'],a:0,ex:'気体が発生する反応では、開放すると気体が逃げて見かけの質量が減ってしまう。'},
+  {id:'b_e13',f:'bio',lv:'easy',q:'種子をつくらず胞子でふえる植物はどれか。',ch:['サクラ','マツ','イヌワラビ','アサガオ'],a:2,ex:'シダ植物やコケ植物は胞子でふえる。シダには維管束があるがコケにはない。'},
+  {id:'b_e14',f:'bio',lv:'easy',q:'コケ植物の特徴として正しいものはどれか。',ch:['維管束がなく体全体で水を吸収する','根から水を吸う','種子をつくる','花が咲く'],a:0,ex:'コケ植物には維管束がなく、仮根は体を固定する役割が主。'},
+  {id:'b_e15',f:'bio',lv:'easy',q:'ホニュウ類の特徴として正しいものはどれか。',ch:['卵生である','恒温で胎生','変温である','えらで呼吸する'],a:1,ex:'ホニュウ類は恒温動物で胎生、肺呼吸、体毛をもつ。'},
+  {id:'b_e16',f:'bio',lv:'easy',q:'節足動物の特徴として正しいものはどれか.',ch:['外骨格をもち体が節に分かれている','背骨をもつ','内骨格をもつ','必ず羽をもつ'],a:0,ex:'昆虫類・甲殻類などが節足動物。外骨格をもち、成長には脱皮が必要。'},
+  {id:'b_e17',f:'bio',lv:'easy',q:'血液が心臓から肺へ向かうときに通る血管はどれか。',ch:['肺動脈','肺静脈','大動脈','大静脈'],a:0,ex:'肺動脈には二酸化炭素の多い静脈血が流れる。動脈・静脈は血液の種類ではなく向きで決まる。'},
+  {id:'b_e18',f:'bio',lv:'easy',q:'だ液に含まれる消化酵素の名前はどれか。',ch:['アミラーゼ','ペプシン','リパーゼ','トリプシン'],a:0,ex:'アミラーゼはデンプンを分解する。ペプシンはタンパク質、リパーゼは脂肪。'},
+  {id:'b_s12',f:'bio',lv:'std',q:'対物レンズの倍率を上げたとき、視野の明るさと範囲はどうなるか。',ch:['明るくなり広くなる','暗くなり狭くなる','明るくなり狭くなる','暗くなり広くなる'],a:1,ex:'高倍率にすると視野は狭く暗くなる。ピント合わせは低倍率から始めるのが基本。'},
+  {id:'b_s13',f:'bio',lv:'std',q:'根の成長点を観察するとき、うすい塩酸に浸す理由はどれか。',ch:['細胞どうしを離れやすくするため','染色するため','細胞を大きくするため','水分を除くため'],a:0,ex:'塩酸処理で細胞どうしをつなぐ物質をとかし、押しつぶしたときに細胞が重ならないようにする。'},
+  {id:'b_s14',f:'bio',lv:'std',q:'酢酸カーミン液や酢酸オルセイン液で染まる部分はどこか。',ch:['細胞壁','染色体（核）','葉緑体','液胞'],a:1,ex:'これらの染色液は核や染色体を赤く染める。'},
+  {id:'b_s15',f:'bio',lv:'std',q:'有性生殖の利点として正しいものはどれか。',ch:['子に多様性が生まれる','親と同じ子ができる','短時間で増える','必ず数が増える'],a:0,ex:'両親の遺伝子が組み合わさるため多様性が生まれ、環境の変化に対応しやすい。'},
+  {id:'b_s16',f:'bio',lv:'std',q:'分解者にあたる生物はどれか。',ch:['ミミズや菌類','草食動物','肉食動物','植物'],a:0,ex:'土の中の小動物・菌類・細菌類が有機物を無機物に分解し、植物が再利用する。'},
+  {id:'b_s17',f:'bio',lv:'std',q:'肉食動物の目のつき方の特徴と、その利点はどれか.',ch:['前向きで距離をつかみやすい','横向きで広く見渡せる','上向きで空が見える','下向きで足元が見える'],a:0,ex:'肉食動物は前向きで立体視でき獲物との距離をはかりやすい。草食動物は横向きで視野が広い。'},
+  {id:'b_h8',f:'bio',lv:'hard',q:'デンプンのりにだ液を入れて40℃に保つ理由はどれか。',ch:['体温に近い温度で酵素がよくはたらくから','デンプンを溶かすため','だ液を殺菌するため','早く冷ますため'],a:0,ex:'消化酵素は体温付近で最もよくはたらく。高温にすると変性して失活する。'},
+  {id:'b_h9',f:'bio',lv:'hard',q:'光合成に光が必要なことを確かめるには、どの条件を変えた実験を比べればよいか。',ch:['光の有無だけを変える','二酸化炭素の量を変える','温度を変える','葉の枚数を変える'],a:0,ex:'調べたい条件だけを変え、他を同じにする。アルミはくで覆った葉と覆わない葉を比べる。'},
+  {id:'b_h10',f:'bio',lv:'hard',q:'ある形質について、親がAaとAaのとき、生まれる子のうち潜性形質が現れる確率はどれか。',ch:['0%','25%','50%','75%'],a:1,ex:'AA:Aa:aa＝1:2:1なので、aaは4分の1で25%。'},
+  {id:'b_h11',f:'bio',lv:'hard',q:'だ液を加えた液をベネジクト液で調べて赤褐色になった。この結果からわかることはどれか。',ch:['糖ができた','デンプンが残っている','タンパク質がある','脂肪がある'],a:0,ex:'ベネジクト液の赤褐色は糖の存在を示す。デンプンが分解された証拠になる。'},
+  {id:'e_e13',f:'earth',lv:'easy',q:'堆積岩のうち、生物の遺がいが固まってできて塩酸で溶けるものはどれか。',ch:['石灰岩','砂岩','れき岩','凝灰岩'],a:0,ex:'石灰岩はうすい塩酸をかけると二酸化炭素を出して溶ける。チャートは溶けない。'},
+  {id:'e_e14',f:'earth',lv:'easy',q:'火山灰が固まってできた岩石はどれか。',ch:['凝灰岩','石灰岩','砂岩','泥岩'],a:0,ex:'凝灰岩は火山灰が堆積してできる。かぎ層として地層の対比に使われる。'},
+  {id:'e_e15',f:'earth',lv:'easy',q:'示準化石として使われる条件はどれか。',ch:['広い範囲に短い期間だけ生存した','狭い範囲に長く生存した','現在も生きている','大型である'],a:0,ex:'アンモナイト（中生代）、サンヨウチュウ（古生代）などが代表例。'},
+  {id:'e_e16',f:'earth',lv:'easy',q:'雲ができるのはどんなときか。',ch:['空気が上昇して膨張し、温度が下がったとき','空気が下降したとき','気温が上がったとき','気圧が上がったとき'],a:0,ex:'上昇した空気は膨張して温度が下がり、露点に達すると水蒸気が水滴になる。'},
+  {id:'e_e17',f:'earth',lv:'easy',q:'日本付近の上空を1年中西から東へ吹く風を何というか.',ch:['偏西風','季節風','貿易風','台風'],a:0,ex:'偏西風のため、日本の天気は西から東へ移り変わることが多い。'},
+  {id:'e_e18',f:'earth',lv:'easy',q:'月の満ち欠けが起こる理由はどれか。',ch:['月が地球のまわりを公転し、太陽の光の当たり方が変わるから','月が光を出すから','地球の影に入るから','月が自転するから'],a:0,ex:'地球の影に入るのは月食で、満ち欠けとは別の現象。'},
+  {id:'e_s12',f:'earth',lv:'std',q:'震源からの距離と初期微動継続時間の関係はどれか。',ch:['比例する','反比例する','関係ない','距離が遠いほど短い'],a:0,ex:'震源から遠いほどP波とS波の到達時刻の差が大きくなる。この関係から震源距離を求められる。'},
+  {id:'e_s13',f:'earth',lv:'std',q:'緊急地震速報が可能なのはなぜか。',ch:['P波がS波より速く伝わるから','S波が速いから','電波が地震より遅いから','震度が先にわかるから'],a:0,ex:'先に届くP波を検知して、大きなゆれのS波が来る前に知らせる仕組み。'},
+  {id:'e_s14',f:'earth',lv:'std',q:'大気圧について正しいものはどれか。',ch:['標高が高いほど小さい','標高が高いほど大きい','どこでも同じ','気温だけで決まる'],a:0,ex:'上にある空気の重さによる圧力なので、標高が高いほど小さくなる。'},
+  {id:'e_s15',f:'earth',lv:'std',q:'等圧線の間隔がせまいところの風の強さはどうなるか。',ch:['強い','弱い','変わらない','風は吹かない'],a:0,ex:'間隔がせまい＝気圧の変化が急で、風が強くなる。'},
+  {id:'e_s16',f:'earth',lv:'std',q:'日本の梅雨をもたらす、勢力が同じくらいの気団がぶつかってできる前線はどれか。',ch:['停滞前線','寒冷前線','温暖前線','閉塞前線'],a:0,ex:'オホーツク海気団と小笠原気団がぶつかり、梅雨前線（停滞前線）ができる。'},
+  {id:'e_s17',f:'earth',lv:'std',q:'太陽の1日の動きを透明半球に記録したとき、点の間隔が等しいことからわかることはどれか。',ch:['地球が一定の速さで自転していること','太陽が近づいていること','季節が変わること','地軸が傾いていること'],a:0,ex:'一定時間ごとの記録の間隔が等しい＝太陽が見かけ上一定の速さで動く＝自転が一定である証拠。'},
+  {id:'e_h8',f:'earth',lv:'hard',q:'ある地震で、震源距離60kmの地点の初期微動継続時間が7.5秒だった。震源距離120kmの地点では何秒か。',ch:['7.5秒','10秒','15秒','30秒'],a:2,ex:'初期微動継続時間は震源距離に比例するので、距離が2倍なら15秒。'},
+  {id:'e_h9',f:'earth',lv:'hard',q:'北緯35度の地点における冬至の南中高度はおよそ何度か。',ch:['約31.6度','約55度','約78.4度','約23.4度'],a:0,ex:'南中高度＝90－緯度－23.4＝90－35－23.4＝31.6度。'},
+  {id:'e_h10',f:'earth',lv:'hard',q:'春分・秋分の日に、北緯35度の地点で南中高度は何度か。',ch:['35度','55度','78.4度','90度'],a:1,ex:'春分・秋分は90－緯度＝90－35＝55度。'},
+  {id:'e_h11',f:'earth',lv:'hard',q:'日本のある地点で、午後8時に東の空に見えた星座は、1か月後の同じ時刻にはどの位置に見えるか。',ch:['さらに東寄り','約30度西へ移動','変わらない','真上'],a:1,ex:'年周運動により、同時刻の星の位置は1か月で約30度西へずれる。'},
+  {id:'e_h12',f:'earth',lv:'hard',q:'金星が「よいの明星」として見えるのはどの方角か。',ch:['明け方の東の空','夕方の西の空','真夜中の南の空','一日中見える'],a:1,ex:'夕方の西空に見えるのがよいの明星、明け方の東空が明けの明星。'},
+  {id:'p_e21',f:'phys',lv:'easy',q:'光源から出た光が四方に広がりながらまっすぐ進むことを何というか。',ch:['光の直進','光の反射','光の屈折','光の分散'],a:0,ex:'光は同じ物質の中では直進する。かげができるのも、日食が起こるのもこの性質による。'},
+  {id:'p_e22',f:'phys',lv:'easy',q:'鏡にうつる像（虚像）の位置として正しいものはどれか。',ch:['鏡の手前','鏡の面上','鏡の奥、物体と対称な位置','どこにもできない'],a:2,ex:'鏡の奥に、鏡の面をはさんで物体と対称な位置に見える。実際に光が集まっているわけではないので虚像という。'},
+  {id:'p_e23',f:'phys',lv:'easy',q:'白色光をプリズムに通すと色が分かれる現象を何というか。',ch:['反射','屈折','分散','散乱'],a:2,ex:'色によって屈折の度合いが違うため分かれる。虹も同じしくみで起こる。'},
+  {id:'p_e24',f:'phys',lv:'easy',q:'凸レンズの焦点より内側に物体を置いたときに見えるものはどれか。',ch:['さかさまの実像','正立の大きな虚像','小さな実像','何も見えない'],a:1,ex:'虫めがねで物を拡大して見ているときの状態。スクリーンには映らない虚像である。'},
+  {id:'p_e25',f:'phys',lv:'easy',q:'凸レンズによる実像の向きはどうなるか。',ch:['物体と同じ向き','上下左右が逆','左右だけ逆','上下だけ逆'],a:1,ex:'実像は上下左右が逆の倒立像になる。虚像は正立で同じ向き。'},
+  {id:'p_e26',f:'phys',lv:'easy',q:'音を伝えるものを何というか。',ch:['媒質','振幅','振動数','音源'],a:0,ex:'空気・水・金属などが媒質になる。媒質がない真空では音は伝わらない。'},
+  {id:'p_e27',f:'phys',lv:'easy',q:'オシロスコープで見た波形が、山と谷の高さが大きいとき、その音はどんな音か。',ch:['高い音','低い音','大きい音','小さい音'],a:2,ex:'振幅（山の高さ）が大きいほど音は大きい。波の間隔が狭いほど音は高い。'},
+  {id:'p_e28',f:'phys',lv:'easy',q:'空気中を伝わる音の速さはおよそどれくらいか。',ch:['約34m/s','約340m/s','約3400m/s','光と同じ'],a:1,ex:'約340m/s（気温15℃のとき）。光の速さ約30万km/sに比べるとはるかに遅い。'},
+  {id:'p_e29',f:'phys',lv:'easy',q:'花火が見えてから音が聞こえるまでに時間がかかるのはなぜか。',ch:['音のほうが光より遅いから','音が曲がるから','光が反射するから','距離が変わるから'],a:0,ex:'光はほぼ瞬時に届くが、音は約340m/sなので、遠いほど遅れて聞こえる。'},
+  {id:'p_e30',f:'phys',lv:'easy',q:'力のはたらきとして正しくないものはどれか。',ch:['物体の形を変える','物体の運動のようすを変える','物体を支える','物体の質量を変える'],a:3,ex:'力は形・運動・支えることに関わるが、質量そのものは変えない。'},
+  {id:'p_e31',f:'phys',lv:'easy',q:'ばねばかりが測っているものはどれか。',ch:['質量','重さ（力の大きさ）','体積','密度'],a:1,ex:'ばねばかりは重さ（重力の大きさ、単位N）を測る。上皿てんびんは質量（g）を測る。'},
+  {id:'p_e32',f:'phys',lv:'easy',q:'同じ物体を月面に持っていったとき、変わるものはどれか。',ch:['質量','重さ','体積','密度'],a:1,ex:'月の重力は地球の約6分の1なので重さは変わるが、物質の量である質量は変わらない。'},
+  {id:'p_e33',f:'phys',lv:'easy',q:'弾性力（弾性の力）とはどんな力か。',ch:['変形した物体がもとにもどろうとする力','面が物体を押し返す力','引き合う力','こすれて生じる力'],a:0,ex:'ばねやゴムがもとにもどろうとするときに生じる力。フックの法則が成り立つ。'},
+  {id:'p_e34',f:'phys',lv:'easy',q:'スポンジの上に、同じ重さの物体を置く向きを変えたところ、へこみ方が変わった。この理由はどれか。',ch:['力の大きさが変わった','接する面積が変わり圧力が変わった','質量が変わった','摩擦が変わった'],a:1,ex:'圧力＝力÷面積。同じ力でも面積が小さいほど圧力が大きく、深くへこむ。'},
+  {id:'p_e35',f:'phys',lv:'easy',q:'回路図で電池を表す記号として、長い線が示すのはどちらの極か。',ch:['+極','-極','どちらでもよい','極はない'],a:0,ex:'長い線が+極、短い太い線が-極。'},
+  {id:'p_e36',f:'phys',lv:'easy',q:'電流が流れる向きとして正しいものはどれか。',ch:['+極から-極へ','-極から+極へ','向きはない','回路による'],a:0,ex:'電流は+極から-極へ流れると決められている。実際の電子の流れはこれと逆向き。'},
+  {id:'p_e37',f:'phys',lv:'easy',q:'直列回路での電圧の関係として正しいものはどれか。',ch:['各部分の電圧の和が全体の電圧','どこでも同じ','電源の半分ずつ','電圧は0になる'],a:0,ex:'直列では電圧が分かれ、その和が電源の電圧に等しい。電流はどこでも同じ。'},
+  {id:'p_e38',f:'phys',lv:'easy',q:'並列回路での電圧の関係として正しいものはどれか。',ch:['各部分に同じ電圧がかかる','分かれて小さくなる','和が電源の電圧になる','電圧はかからない'],a:0,ex:'並列では各部分に電源と同じ電圧がかかる。電流のほうが分かれる。'},
+  {id:'p_e39',f:'phys',lv:'easy',q:'抵抗が大きいほど、同じ電圧で流れる電流はどうなるか。',ch:['大きくなる','小さくなる','変わらない','0になる'],a:1,ex:'I＝V/R より、抵抗が大きいほど電流は小さくなる。'},
+  {id:'p_e40',f:'phys',lv:'easy',q:'電熱線に電流を流したときに発生する熱の量に関係しないものはどれか。',ch:['電圧','電流','時間','電熱線の色'],a:3,ex:'発熱量[J]＝電力[W]×時間[s]。電力は電圧と電流で決まる。'},
+  {id:'p_e41',f:'phys',lv:'easy',q:'磁石のまわりに置いた鉄粉が模様をつくるのは、何があるからか。',ch:['磁界','電界','重力','摩擦'],a:0,ex:'磁石のまわりの磁力がはたらく空間を磁界という。鉄粉の並びが磁力線を示す。'},
+  {id:'p_e42',f:'phys',lv:'easy',q:'導線に電流を流したとき、そのまわりにできるものはどれか。',ch:['同心円状の磁界','直線状の磁界','電界のみ','何もできない'],a:0,ex:'電流のまわりには同心円状の磁界ができる。向きは右ねじの法則で決まる。'},
+  {id:'p_e43',f:'phys',lv:'easy',q:'コイルの磁界を強くする方法として正しくないものはどれか。',ch:['巻き数を増やす','電流を大きくする','鉄心を入れる','導線を長くする'],a:3,ex:'巻き数・電流・鉄心が磁界の強さに関係する。単に長くしても強くならない。'},
+  {id:'p_e44',f:'phys',lv:'easy',q:'静電気が起こるのはどんなときか。',ch:['異なる物体をこすり合わせたとき','同じ物体どうしをこすったとき','水にぬらしたとき','温めたとき'],a:0,ex:'異なる2つの物体をこすると電子が移動し、一方が+、他方が-の電気を帯びる。'},
+  {id:'c_e19',f:'chem',lv:'easy',q:'物質そのものの性質に関わる「体積あたりの質量」を何というか。',ch:['密度','質量','重さ','濃度'],a:0,ex:'密度は物質ごとに決まっているので、物質を見分ける手がかりになる。'},
+  {id:'c_e20',f:'chem',lv:'easy',q:'水に浮く物質の密度は、水と比べてどうか。',ch:['大きい','小さい','同じ','関係ない'],a:1,ex:'水の密度は1g/cm3。これより小さい物質は浮き、大きい物質は沈む。'},
+  {id:'c_e21',f:'chem',lv:'easy',q:'固体→液体の状態変化を何というか。',ch:['融解','凝固','蒸発','凝縮'],a:0,ex:'固体→液体が融解、液体→固体が凝固。液体→気体が蒸発（気化）、気体→液体が凝縮。'},
+  {id:'c_e22',f:'chem',lv:'easy',q:'純粋な物質が状態変化している間、温度はどうなるか。',ch:['上がり続ける','一定になる','下がり続ける','不規則に変わる'],a:1,ex:'融点や沸点では、加えた熱が状態変化に使われるため温度が変わらない。'},
+  {id:'c_e23',f:'chem',lv:'easy',q:'混合物の沸点の特徴として正しいものはどれか。',ch:['一定である','一定にならない','必ず100℃','沸騰しない'],a:1,ex:'純粋な物質は沸点が一定だが、混合物では温度が変化し続ける。'},
+  {id:'c_e24',f:'chem',lv:'easy',q:'ガスバーナーに点火するとき、最初に開けるものはどれか。',ch:['ガス調節ねじ','空気調節ねじ','元栓のみ','どちらでもよい'],a:0,ex:'元栓とコックを開けてからマッチに火をつけ、ガス調節ねじ、次に空気調節ねじの順に開く。'},
+  {id:'c_e25',f:'chem',lv:'easy',q:'ガスバーナーの炎がオレンジ色のとき、どうすればよいか。',ch:['空気調節ねじを開けて空気を増やす','ガスを減らす','そのままでよい','火を消す'],a:0,ex:'空気が不足しているとオレンジ色になる。空気を増やすと青色の安定した炎になる。'},
+  {id:'c_e26',f:'chem',lv:'easy',q:'メスシリンダーで体積を読むとき、目を合わせる位置はどこか.',ch:['液面の中央のへこんだところ','液面のふちの高い部分','容器の底','目盛りの上端'],a:0,ex:'水面は中央がへこむ（メニスカス）。その最も低い位置を、目線を水平にして最小目盛りの10分の1まで読む。'},
+  {id:'c_e27',f:'chem',lv:'easy',q:'水にとける物質の量が限界に達した水溶液を何というか。',ch:['飽和水溶液','希薄溶液','混合物','コロイド'],a:0,ex:'その温度でそれ以上とけない状態。とける限界の質量を溶解度という。'},
+  {id:'c_e28',f:'chem',lv:'easy',q:'水溶液の性質として正しいものはどれか。',ch:['どの部分も濃さが同じで透明','底のほうが濃い','時間がたつと沈む','必ず色がつく'],a:0,ex:'水溶液では溶質が均一に散らばっており、放置しても分離しない。'},
+  {id:'c_e29',f:'chem',lv:'easy',q:'気体の集め方で、水にとけにくい気体に適しているものはどれか。',ch:['水上置換法','上方置換法','下方置換法','どれも同じ'],a:0,ex:'水にとけにくい気体（酸素・水素など）は水上置換法で純粋に集められる。'},
+  {id:'c_e30',f:'chem',lv:'easy',q:'過酸化水素水に二酸化マンガンを加えると発生する気体はどれか。',ch:['水素','酸素','二酸化炭素','アンモニア'],a:1,ex:'二酸化マンガンは反応を助ける触媒としてはたらき、それ自身は変化しない。'},
+  {id:'c_e31',f:'chem',lv:'easy',q:'石灰石にうすい塩酸を加えると発生する気体はどれか。',ch:['水素','酸素','二酸化炭素','窒素'],a:2,ex:'炭酸カルシウムと塩酸が反応して二酸化炭素が発生する。'},
+  {id:'c_e32',f:'chem',lv:'easy',q:'プラスチックに共通する性質として正しくないものはどれか。',ch:['電気を通しにくい','軽い','さびない','燃えない'],a:3,ex:'プラスチックは有機物なので燃える。燃えにくい種類はあるが、燃えないわけではない。'},
+  {id:'c_e33',f:'chem',lv:'easy',q:'化学変化と状態変化のちがいとして正しいものはどれか。',ch:['化学変化では別の物質ができる','状態変化では別の物質ができる','どちらも同じ','化学変化では質量が減る'],a:0,ex:'状態変化は姿が変わるだけ。化学変化では原子の組み合わせが変わり、別の物質になる。'},
+  {id:'c_e34',f:'chem',lv:'easy',q:'分子について正しいものはどれか。',ch:['物質の性質を示す最小の粒子','原子より小さい','必ず1種類の原子からなる','分けられない'],a:0,ex:'分子はいくつかの原子が結びついたもので、その物質の性質を示す最小単位。'},
+  {id:'c_e35',f:'chem',lv:'easy',q:'元素記号と物質名の組み合わせが正しいものはどれか.',ch:['Na＝ナトリウム','Fe＝銅','Cu＝鉄','Ag＝金'],a:0,ex:'Naはナトリウム、Feは鉄、Cuは銅、Agは銀、Auが金。'},
+  {id:'c_e36',f:'chem',lv:'easy',q:'化学変化のうち、1種類の物質が2種類以上に分かれる変化を何というか。',ch:['分解','化合','酸化','還元'],a:0,ex:'加熱による熱分解と、電流による電気分解がある。'},
+  {id:'c_e37',f:'chem',lv:'easy',q:'炭酸水素ナトリウムを加熱したときに、試験管の口を下げる理由はどれか.',ch:['発生した水が加熱部にもどって割れるのを防ぐため','ガスをためないため','見やすくするため','温度を上げるため'],a:0,ex:'生じた水が加熱部に流れると急冷で試験管が割れる。口をわずかに下げるのが鉄則。'},
+  {id:'c_e38',f:'chem',lv:'easy',q:'鉄粉と硫黄の混合物を加熱するとき、加熱をやめても反応が続くのはなぜか。',ch:['反応で熱が発生するから','外から熱が入るから','空気が入るから','鉄が燃えるから'],a:0,ex:'発熱反応なので、いったん始まると自身が出す熱で反応が進む。'},
+  {id:'c_e39',f:'chem',lv:'easy',q:'スチールウールを燃やしたとき、質量はどうなるか。',ch:['増える','減る','変わらない','半分になる'],a:0,ex:'酸素と結びつくため、結びついた酸素の分だけ質量が増える。'},
+  {id:'c_e40',f:'chem',lv:'easy',q:'ろうそくが燃えたときにできる物質の組み合わせはどれか。',ch:['二酸化炭素と水','酸素と水素','窒素と水','炭素のみ'],a:0,ex:'ろうは有機物なので、燃えると二酸化炭素と水ができる。'},
+  {id:'c_e41',f:'chem',lv:'easy',q:'発熱反応と吸熱反応のうち、周囲の温度が下がるのはどちらか。',ch:['発熱反応','吸熱反応','どちらも下がる','どちらも変わらない'],a:1,ex:'吸熱反応は周囲から熱をうばうので温度が下がる。塩化アンモニウムと水酸化バリウムの反応が例。'},
+  {id:'b_e19',f:'bio',lv:'easy',q:'花のつくりで、受粉後に果実になる部分はどれか。',ch:['子房','胚珠','やく','柱頭'],a:0,ex:'子房が果実に、胚珠が種子になる。'},
+  {id:'b_e20',f:'bio',lv:'easy',q:'おしべの先端にあり、花粉が入っている部分はどれか。',ch:['やく','柱頭','子房','胚珠'],a:0,ex:'おしべの先のやくで花粉がつくられ、めしべの先の柱頭につくと受粉になる。'},
+  {id:'b_e21',f:'bio',lv:'easy',q:'マツの花のつくりについて正しいものはどれか。',ch:['子房がなく胚珠がむき出し','子房に包まれた胚珠がある','花弁が大きい','虫が花粉を運ぶ'],a:0,ex:'マツは裸子植物。花弁やがくもなく、風によって花粉が運ばれる（風媒花）。'},
+  {id:'b_e22',f:'bio',lv:'easy',q:'双子葉類の茎の維管束の並び方はどれか。',ch:['輪のように並ぶ','散らばっている','中央に集まる','外側だけ'],a:0,ex:'双子葉類は輪状、単子葉類は散在。根も主根と側根か、ひげ根かで異なる。'},
+  {id:'b_e23',f:'bio',lv:'easy',q:'維管束のうち、茎の内側にあるのはどちらか。',ch:['道管','師管','形成層','表皮'],a:0,ex:'茎では内側が道管、外側が師管。葉では表側が道管、裏側が師管。'},
+  {id:'b_e24',f:'bio',lv:'easy',q:'光合成でできた栄養分が運ばれる管はどれか。',ch:['道管','師管','気孔','葉緑体'],a:1,ex:'師管は葉でつくられた栄養分を全身に運ぶ。'},
+  {id:'b_e25',f:'bio',lv:'easy',q:'葉の表面をおおい、水の蒸発を防いでいる部分はどれか。',ch:['表皮','葉肉','葉脈','気孔'],a:0,ex:'表皮にはクチクラという層があり、水の蒸発を防ぐ。'},
+  {id:'b_e26',f:'bio',lv:'easy',q:'蒸散のはたらきとして正しくないものはどれか。',ch:['根からの水の吸い上げを助ける','体温の上昇を防ぐ','養分をつくる','水分量を調節する'],a:2,ex:'養分をつくるのは光合成。蒸散は水の移動と温度調節に関わる。'},
+  {id:'b_e27',f:'bio',lv:'easy',q:'ルーペの正しい使い方はどれか。',ch:['目に近づけて持ち、観察物を動かす','観察物に近づけて目を離す','太陽を見る','固定して使う'],a:0,ex:'ルーペは目に近づけて持つ。動かせない物を見るときは自分が動いてピントを合わせる。'},
+  {id:'b_e28',f:'bio',lv:'easy',q:'顕微鏡でピントを合わせるとき、正しい手順はどれか。',ch:['対物レンズとプレパラートを離しながら合わせる','近づけながら合わせる','どちらでもよい','接眼レンズを動かす'],a:0,ex:'まず横から見て近づけ、次に接眼レンズをのぞきながら離す方向で合わせる。ぶつけて割るのを防ぐため。'},
+  {id:'b_e29',f:'bio',lv:'easy',q:'胆汁のはたらきとして正しいものはどれか。',ch:['脂肪を細かい粒にする','デンプンを分解する','タンパク質を分解する','水を吸収する'],a:0,ex:'胆汁に消化酵素は含まれない。脂肪を乳化してリパーゼがはたらきやすくする。'},
+  {id:'b_e30',f:'bio',lv:'easy',q:'ブドウ糖とアミノ酸が吸収された後に入る場所はどれか。',ch:['毛細血管','リンパ管','気管','じん臓'],a:0,ex:'ブドウ糖とアミノ酸は柔毛の毛細血管へ、脂肪酸とモノグリセリドはリンパ管へ入る。'},
+  {id:'b_e31',f:'bio',lv:'easy',q:'肺には筋肉がないのに呼吸ができるのはなぜか。',ch:['横隔膜とろっ骨が動くから','肺が自分でふくらむから','空気が押し込まれるから','心臓が動かすから'],a:0,ex:'横隔膜が下がりろっ骨が上がると胸の空間が広がり、肺に空気が入る。'},
+  {id:'b_e32',f:'bio',lv:'easy',q:'肺で酸素を受け取った血液が最初にもどる場所はどこか。',ch:['左心房','右心房','左心室','右心室'],a:0,ex:'肺→肺静脈→左心房→左心室→大動脈→全身、という順路。'},
+  {id:'b_e33',f:'bio',lv:'easy',q:'細胞呼吸（細胞の呼吸）で行われることはどれか。',ch:['養分と酸素からエネルギーを取り出す','養分をつくる','二酸化炭素を吸収する','水を分解する'],a:0,ex:'細胞で養分を酸素で分解しエネルギーを取り出す。二酸化炭素と水ができる。'},
+  {id:'b_e34',f:'bio',lv:'easy',q:'刺激を受け取る目や耳などを何というか。',ch:['感覚器官','運動器官','中枢神経','末しょう神経'],a:0,ex:'感覚器官が受け取った刺激は感覚神経を通って中枢神経へ伝わる。'},
+  {id:'b_e35',f:'bio',lv:'easy',q:'目で光を受け取る細胞があるのはどこか。',ch:['網膜','角膜','レンズ（水晶体）','虹彩'],a:0,ex:'レンズで屈折した光が網膜上に像を結び、そこの細胞が光の刺激を受け取る。'},
+  {id:'b_e36',f:'bio',lv:'easy',q:'うでを曲げるとき、筋肉はどうなっているか。',ch:['内側が縮み外側がゆるむ','両方縮む','両方ゆるむ','外側だけ縮む'],a:0,ex:'筋肉は縮むことしかできないので、対になった筋肉が交互にはたらく。両端はけんで骨についている。'},
+  {id:'e_e19',f:'earth',lv:'easy',q:'マグマが冷えて固まった岩石をまとめて何というか。',ch:['火成岩','堆積岩','変成岩','石灰岩'],a:0,ex:'火成岩は火山岩と深成岩に分かれる。堆積岩は土砂や生物の遺がいが固まったもの。'},
+  {id:'e_e20',f:'earth',lv:'easy',q:'深成岩に見られる、同じくらいの大きさの鉱物が組み合わさったつくりを何というか。',ch:['等粒状組織','斑状組織','層状組織','結晶質'],a:0,ex:'地下深くでゆっくり冷えるため鉱物が大きく成長する。急冷の火山岩は斑状組織。'},
+  {id:'e_e21',f:'earth',lv:'easy',q:'火山岩の斑状組織で、大きな結晶のまわりを埋めている部分を何というか。',ch:['石基','斑晶','鉱物','マグマ'],a:0,ex:'大きな結晶が斑晶、そのまわりの細かい部分が石基。石基は急冷でできた。'},
+  {id:'e_e22',f:'earth',lv:'easy',q:'無色鉱物にあたるものはどれか。',ch:['セキエイ','クロウンモ','カクセン石','キ石'],a:0,ex:'セキエイとチョウ石が無色鉱物。有色鉱物はクロウンモ・カクセン石・キ石・カンラン石。'},
+  {id:'e_e23',f:'earth',lv:'easy',q:'れき岩・砂岩・泥岩を区別する基準はどれか。',ch:['粒の大きさ','色','かたさ','でき方'],a:0,ex:'2mm以上がれき、2〜1/16mmが砂、それより小さいものが泥。'},
+  {id:'e_e24',f:'earth',lv:'easy',q:'地層が水平にたい積したあと、地上で観察できるようになるまでに必要なことはどれか。',ch:['隆起','沈降','侵食のみ','風化のみ'],a:0,ex:'海底でたい積した地層が隆起して陸地になり、侵食されて観察できるようになる。'},
+  {id:'e_e25',f:'earth',lv:'easy',q:'流れる水のはたらきのうち、土砂を運ぶはたらきを何というか。',ch:['運搬','侵食','たい積','風化'],a:0,ex:'岩石をけずるのが侵食、運ぶのが運搬、積もらせるのがたい積。'},
+  {id:'e_e26',f:'earth',lv:'easy',q:'川が山地から平地に出るところにできる地形はどれか.',ch:['扇状地','三角州','V字谷','リアス海岸'],a:0,ex:'流れがゆるやかになり土砂がたい積して扇状地ができる。河口では三角州。'},
+  {id:'e_e27',f:'earth',lv:'easy',q:'地震が発生した場所を何というか。',ch:['震源','震央','断層','プレート'],a:0,ex:'地下で地震が起きた場所が震源、その真上の地表の点が震央。'},
+  {id:'e_e28',f:'earth',lv:'easy',q:'日本の震度階級はいくつに分かれているか。',ch:['7段階','8段階','10段階','5段階'],a:2,ex:'震度0〜7の10段階（5と6にそれぞれ強・弱があるため）。'},
+  {id:'e_e29',f:'earth',lv:'easy',q:'1気圧はおよそ何hPaか。',ch:['1013hPa','100hPa','760hPa','10hPa'],a:0,ex:'約1013hPa。水銀柱760mmの高さに相当する。'},
+  {id:'e_e30',f:'earth',lv:'easy',q:'湿度が100%になったときの状態はどれか。',ch:['空気が水蒸気で飽和している','水がない','気温が0℃','雨が降っている'],a:0,ex:'その気温での飽和水蒸気量まで水蒸気を含んだ状態。これ以上は水滴になる。'},
+  {id:'e_e31',f:'earth',lv:'easy',q:'気温が上がると飽和水蒸気量はどうなるか。',ch:['大きくなる','小さくなる','変わらない','0になる'],a:0,ex:'あたたかい空気ほど多くの水蒸気を含むことができる。'},
+  {id:'e_e32',f:'earth',lv:'easy',q:'天気図で、風向はどのように表されるか。',ch:['矢羽根が風の吹いてくる方向を指す','風の進む方向を指す','数字で表す','記号はない'],a:0,ex:'風向は風が吹いてくる方位で表す。北風とは北から吹く風のこと。'},
+  {id:'e_e33',f:'earth',lv:'easy',q:'高気圧の中心付近の天気として多いものはどれか。',ch:['晴れ','雨','雪','くもり'],a:0,ex:'高気圧は下降気流で雲ができにくいため晴れやすい。'},
+  {id:'e_e34',f:'earth',lv:'easy',q:'前線とは何と何の境目にできるか。',ch:['あたたかい空気と冷たい空気','高気圧と低気圧','海と陸','昼と夜'],a:0,ex:'性質の異なる気団が接する面が前線面、それが地表と交わる線が前線。'},
+  {id:'e_e35',f:'earth',lv:'easy',q:'日本の春や秋に、天気が周期的に変わる原因はどれか。',ch:['移動性高気圧と低気圧が交互に通るから','台風が来るから','季節風が吹くから','前線が停滞するから'],a:0,ex:'偏西風に流されて移動性高気圧と低気圧が交互に通過するため。'},
+  {id:'e_e36',f:'earth',lv:'easy',q:'海陸風で、昼に海から陸へ風が吹く理由はどれか。',ch:['陸のほうがあたたまりやすく上昇気流ができるから','海があたたまりやすいから','気圧が同じだから','風が強いから'],a:0,ex:'陸はあたたまりやすく冷えやすい。昼は陸の気圧が低くなり、海風が吹く。'},
+  {id:'p_t1',f:'phys',lv:'easy',q:'プールの底が実際より浅く見えるのはなぜか。',ch:['水中からの光が水面で屈折して目に届くから','光が反射するから','水が光を吸収するから','水面が動くから'],a:0,ex:'底からの光が水面で折れ曲がり、目にはその延長線上に物があるように見える。だから実際より浅い位置に見える。'},
+  {id:'p_t2',f:'phys',lv:'easy',q:'鏡に全身をうつすには、身長の何分の1の鏡があればよいか。',ch:['4分の1','2分の1','3分の2','身長と同じ'],a:1,ex:'反射の法則から、鏡の必要な長さは身長の半分。鏡との距離を変えても必要な長さは変わらない。'},
+  {id:'p_t3',f:'phys',lv:'easy',q:'雷が光ってから3秒後に音が聞こえた。雷までのおよその距離はどれか（音速340m/s）。',ch:['約100m','約340m','約1000m','約3400m'],a:2,ex:'光はほぼ瞬時なので、音が3秒かかった距離＝340×3＝約1020m。「光ってから何秒」で距離がわかる。'},
+  {id:'p_t4',f:'phys',lv:'easy',q:'スピーカーの前に置いたろうそくの炎が音に合わせてゆれた。この観察からわかることはどれか。',ch:['音は空気を振動させて伝わること','音が熱を持つこと','音が光ること','空気が動かないこと'],a:0,ex:'音の正体が空気の振動であることを示す観察。振動が炎を動かしている。'},
+  {id:'p_t5',f:'phys',lv:'easy',q:'綱引きで動かないとき、両チームの力の関係はどうなっているか。',ch:['どちらも力を出していない','2力がつり合っている','片方だけ力を出している','力が消えている'],a:1,ex:'大きさが等しく、向きが逆で、同一直線上にあるためつり合う。力がないのではない。'},
+  {id:'p_t6',f:'phys',lv:'easy',q:'スキー板を履くと雪に沈みにくいのはなぜか。',ch:['体重が減るから','接する面積が大きくなり圧力が小さくなるから','雪が固くなるから','摩擦が増えるから'],a:1,ex:'圧力＝力÷面積。面積を大きくすると圧力が小さくなり沈みにくい。逆に画びょうは面積を小さくして圧力を大きくしている。'},
+  {id:'p_t7',f:'phys',lv:'easy',q:'標高の高い山でお菓子の袋がふくらむのはなぜか。',ch:['まわりの大気圧が小さくなるから','温度が上がるから','袋がのびるから','中の気体が増えるから'],a:0,ex:'上空ほど大気圧が小さく、袋の内側の気体が外へ押し返す力が相対的に強くなるためふくらむ。'},
+  {id:'p_t8',f:'phys',lv:'std',q:'豆電球2個を直列にしたとき、1個のときより暗くなるのはなぜか。',ch:['全体の抵抗が大きくなり電流が小さくなるから','電圧が上がるから','電流の向きが変わるから','抵抗が小さくなるから'],a:0,ex:'直列では抵抗の和になるので電流が減り、1個あたりの電力（明るさ）も下がる。'},
+  {id:'p_t9',f:'phys',lv:'std',q:'並列につないだ豆電球の1つを外しても、もう1つがつき続けるのはなぜか。',ch:['電流の道すじが別々にあるから','電圧が上がるから','抵抗が0になるから','電池が2つあるから'],a:0,ex:'並列は電流の道が複数あるため、片方が切れてももう一方に電流が流れる。家庭の配線が並列なのはこのため。'},
+  {id:'p_t10',f:'phys',lv:'std',q:'同じ電圧で、抵抗の小さい電熱線のほうが発熱量が大きいのはどんなつなぎ方のときか。',ch:['直列','並列','どちらも同じ','つなぎ方によらない'],a:1,ex:'並列は電圧が同じなのでQ＝V2/Rより抵抗が小さいほど発熱大。直列は電流が同じなのでQ＝I2Rより抵抗が大きいほど発熱大。'},
+  {id:'p_t11',f:'phys',lv:'std',q:'電流計をうっかり電源に直接つないではいけないのはなぜか。',ch:['電流計の抵抗が非常に小さく、大電流が流れて壊れるから','電圧が測れないから','向きがわからないから','電池が減るから'],a:0,ex:'電流計は抵抗がごく小さい。直接つなぐとショート状態になり危険。電圧計は逆に抵抗が非常に大きい。'},
+  {id:'p_t12',f:'phys',lv:'std',q:'台車が斜面を下りきったあと、水平面で速さがほぼ一定になるのはなぜか。',ch:['進む向きにはたらく力がなくなるから','摩擦がなくなるから','重力が消えるから','質量が減るから'],a:0,ex:'水平面では重力の斜面方向の分力がなくなり、合力がほぼ0になるため等速直線運動に近づく。'},
+  {id:'p_t13',f:'phys',lv:'std',q:'ジェットコースターが最高点から下るほど速くなるのはなぜか。',ch:['位置エネルギーが運動エネルギーに移り変わるから','重力が大きくなるから','摩擦が減るから','質量が増えるから'],a:0,ex:'高さが減るぶん位置エネルギーが減り、その分が運動エネルギーに変わって速くなる。'},
+  {id:'p_t14',f:'phys',lv:'hard',q:'同じ高さから、質量2倍の球と1倍の球を落とした。地面に達したときの運動エネルギーの比はどうなるか。',ch:['1:1','2:1','4:1','1:2'],a:1,ex:'位置エネルギーは質量に比例するので、変換された運動エネルギーも2倍。速さは同じでもエネルギーは異なる点に注意。'},
+  {id:'p_t15',f:'phys',lv:'hard',q:'電気ストーブ（1000W）を2時間使ったときの電力量は何kWhか。',ch:['0.5kWh','2kWh','20kWh','2000kWh'],a:1,ex:'1000W＝1kW。1kW×2時間＝2kWh。電気料金はこのkWhで計算される。'},
+  {id:'p_t16',f:'phys',lv:'hard',q:'同じ材質の導線で、長さを2倍にすると抵抗はどうなるか。',ch:['半分','変わらない','2倍','4倍'],a:2,ex:'抵抗は長さに比例し、断面積に反比例する。太くすると抵抗は小さくなる。'},
+  {id:'c_t1',f:'chem',lv:'easy',q:'冷たいコップの外側に水滴がつくのはなぜか。',ch:['まわりの空気が冷やされて露点に達したから','コップから水がしみ出るから','氷がとけたから','水が蒸発したから'],a:0,ex:'コップに触れた空気が冷やされ、含みきれなくなった水蒸気が水滴になる。結露の原理。'},
+  {id:'c_t2',f:'chem',lv:'easy',q:'砂糖を水に溶かしたとき、全体の質量はどうなるか。',ch:['溶かした分だけ増える','変わらない','減る','半分になる'],a:0,ex:'砂糖の粒子は見えなくなるだけでなくなってはいない。水100g＋砂糖10gなら水溶液は110g。'},
+  {id:'c_t3',f:'chem',lv:'easy',q:'ペットボトルに熱湯を入れてふたをして冷やすとへこむのはなぜか。',ch:['中の水蒸気が水になり体積が小さくなるから','ペットボトルが縮むから','空気が増えるから','温度で溶けるから'],a:0,ex:'水蒸気が凝縮して体積が急激に小さくなり、内側の圧力が下がって大気圧に押される。'},
+  {id:'c_t4',f:'chem',lv:'easy',q:'固体のロウが液体のロウに浮かないのはなぜか。',ch:['固体のほうが密度が大きいから','固体のほうが軽いから','温度が違うから','形が違うから'],a:0,ex:'ふつうの物質は固体のほうが密度が大きい。水だけが例外で氷が浮く。'},
+  {id:'c_t5',f:'chem',lv:'easy',q:'水を熱し続けたとき、沸騰中に温度が100℃のまま変わらないのはなぜか.',ch:['加えた熱が状態変化に使われるから','熱が逃げるから','水が減るから','温度計が壊れているから'],a:0,ex:'加熱のエネルギーは粒子の結びつきを切るのに使われ、温度上昇には使われない。'},
+  {id:'c_t6',f:'chem',lv:'easy',q:'試験管に入れた液体を加熱するとき、沸騰石を入れる理由はどれか。',ch:['急激な沸騰（突沸）を防ぐため','早く沸騰させるため','温度を上げるため','液体をきれいにするため'],a:0,ex:'沸騰石の小さな穴から静かに泡が出ることで、突沸による吹きこぼれや事故を防ぐ。'},
+  {id:'c_t7',f:'chem',lv:'easy',q:'ろ過をしても取り除けないものはどれか。',ch:['水に溶けている物質','溶けずに浮いている粒','砂','沈んだ固体'],a:0,ex:'溶けた物質は粒子が非常に小さくろ紙を通り抜ける。取り出すには蒸発や再結晶を使う。'},
+  {id:'c_t8',f:'chem',lv:'std',q:'密閉容器の中で、うすい塩酸と石灰石を反応させた。ふたを開けずに質量をはかると、反応の前後でどうなるか。',ch:['変わらない','増える','減る','半分になる'],a:0,ex:'質量保存の法則。ふたを開けると二酸化炭素が逃げて減ってしまう。'},
+  {id:'c_t9',f:'chem',lv:'std',q:'スチールウールは燃えると質量が増えるのに、木が燃えると灰は軽くなる。この違いの理由はどれか。',ch:['木では気体が発生して空気中へ出ていくから','木は燃えないから','鉄は軽いから','灰が水を含むから'],a:0,ex:'木は有機物で、燃えると二酸化炭素と水蒸気が空気中へ出る。鉄は酸素と結びつくだけなので増える。'},
+  {id:'c_t10',f:'chem',lv:'std',q:'酸化銅と炭素を混ぜて加熱したあと、石灰水が白くにごった。このことからわかることはどれか。',ch:['二酸化炭素が発生したこと','酸素が発生したこと','水ができたこと','銅が溶けたこと'],a:0,ex:'炭素が酸化銅から酸素をうばって二酸化炭素になった。同時に酸化銅は還元されて銅になる。'},
+  {id:'c_t11',f:'chem',lv:'std',q:'うすい塩酸に水酸化ナトリウム水溶液を少しずつ加えていくと、水溶液中の水素イオンの数はどうなるか。',ch:['減っていく','増えていく','変わらない','2倍になる'],a:0,ex:'加えた水酸化物イオンと結びついて水になるため、水素イオンは減っていく。中性で0になる。'},
+  {id:'c_t12',f:'chem',lv:'std',q:'中和が進む間、水溶液中のナトリウムイオンの数はどうなるか。',ch:['増えていく','減っていく','変わらない','0になる'],a:0,ex:'ナトリウムイオンは反応に関わらず（そのまま残る）、加えた分だけ増え続ける。塩化物イオンは変わらない。'},
+  {id:'c_t13',f:'chem',lv:'std',q:'電気分解で塩酸を分解したとき、陰極側に発生する気体の性質を確かめる方法はどれか。',ch:['マッチの火を近づけて音を確認する','石灰水に通す','においをかぐ','リトマス紙をつける'],a:0,ex:'陰極には水素が発生する。火を近づけるとポンと音を立てて燃える。陽極の塩素は刺激臭と漂白作用で確認。'},
+  {id:'c_t14',f:'chem',lv:'hard',q:'マグネシウム0.6gを加熱したところ、加熱後の質量が0.9gで一定になった。結びついた酸素は何gか。',ch:['0.2g','0.3g','0.6g','0.9g'],a:1,ex:'0.9－0.6＝0.3g。Mg:O＝3:2の比とも一致する。'},
+  {id:'c_t15',f:'chem',lv:'hard',q:'銅の粉末を加熱していくと、あるところから質量が増えなくなった。この理由はどれか。',ch:['すべての銅が酸素と結びついたから','酸素がなくなったから','銅が蒸発したから','温度が下がったから'],a:0,ex:'反応が完了すると、それ以上酸素と結びつかないので質量が一定になる。この点から反応する質量比を求められる。'},
+  {id:'c_t16',f:'chem',lv:'hard',q:'40℃の飽和食塩水を20℃に冷やしてもほとんど結晶が出ないのはなぜか。',ch:['食塩の溶解度が温度でほとんど変わらないから','食塩が溶けないから','水が蒸発するから','温度が下がらないから'],a:0,ex:'食塩は温度による溶解度の変化が小さい。再結晶で取り出すには水を蒸発させる必要がある。'},
+  {id:'b_t1',f:'bio',lv:'easy',q:'日光に当てた葉の一部をアルミはくでおおって実験するのはなぜか。',ch:['光の有無だけを変えて比べるため','葉を守るため','温度を上げるため','水を防ぐため'],a:0,ex:'調べたい条件だけを変える対照実験。同じ葉で比べるので他の条件がそろう。'},
+  {id:'b_t2',f:'bio',lv:'easy',q:'ヨウ素液で調べる前に、葉をあたためたエタノールに入れる理由はどれか。',ch:['葉の緑色を抜いて色の変化を見やすくするため','デンプンを増やすため','葉をやわらかくするため','消毒するため'],a:0,ex:'クロロフィルを溶かし出して脱色する。エタノールは引火しやすいので湯せんで温める。'},
+  {id:'b_t3',f:'bio',lv:'easy',q:'水草を入れた試験管に息を吹き込んでから光を当てると気泡が出た。この気体は何か。',ch:['酸素','二酸化炭素','水素','窒素'],a:0,ex:'息に含まれる二酸化炭素を材料に光合成が行われ、酸素が発生する。'},
+  {id:'b_t4',f:'bio',lv:'easy',q:'根の先端近くに細い毛のような根毛があることの利点はどれか。',ch:['表面積が大きくなり水を吸収しやすい','体を支えやすい','光を集めやすい','風に強い'],a:0,ex:'表面積を大きくして吸収効率を上げる工夫。小腸の柔毛、肺の肺胞と同じ考え方。'},
+  {id:'b_t5',f:'bio',lv:'easy',q:'葉が互いに重ならないようについているのはなぜか。',ch:['どの葉にも光が当たるようにするため','風通しをよくするため','水をためるため','虫を防ぐため'],a:0,ex:'葉のつき方（葉序）は、光合成の効率を上げるように配置されている。'},
+  {id:'b_t6',f:'bio',lv:'easy',q:'肺胞がたくさんの小さな袋に分かれていることの利点はどれか。',ch:['気体を交換する表面積が大きくなる','空気をためられる','音が出る','体温が上がる'],a:0,ex:'表面積を大きくして効率を上げるという、生物に共通する仕組み。'},
+  {id:'b_t7',f:'bio',lv:'std',q:'だ液のはたらきを調べる実験を、40℃の湯に入れて行うのはなぜか。',ch:['体温に近い温度で消化酵素がよくはたらくから','早く冷ますため','水を蒸発させるため','だ液を薄めるため'],a:0,ex:'酵素には最もよくはたらく温度があり、ヒトの消化酵素は体温付近。高温では変性して失活する。'},
+  {id:'b_t8',f:'bio',lv:'std',q:'デンプンにだ液を加えた液が、ヨウ素液で青紫色にならずベネジクト液で赤褐色になった。この結果が示すことはどれか。',ch:['デンプンが分解されて糖ができた','デンプンが残っている','タンパク質ができた','変化しなかった'],a:0,ex:'ヨウ素液が反応しない＝デンプンがない。ベネジクト液が反応する＝糖がある。両方を組み合わせて判断する。'},
+  {id:'b_t9',f:'bio',lv:'std',q:'息を吸うとき横隔膜はどう動くか。',ch:['下がって胸の空間が広がる','上がって狭くなる','動かない','左右に動く'],a:0,ex:'横隔膜が下がりろっ骨が上がることで胸の空間が広がり、気圧が下がって空気が入ってくる。'},
+  {id:'b_t10',f:'bio',lv:'std',q:'タマネギの根で細胞分裂を観察するとき、先端に近い部分を使うのはなぜか。',ch:['成長点があり分裂している細胞が多いから','細胞が大きいから','色がつきやすいから','やわらかいから'],a:0,ex:'根の先端近くの成長点で細胞分裂がさかんに行われている。根元では分裂が終わっている。'},
+  {id:'b_t11',f:'bio',lv:'std',q:'無性生殖でふえた作物は、病気が広がると全滅しやすい。この理由はどれか.',ch:['すべて同じ遺伝子をもち同じ弱点をもつから','数が少ないから','成長が遅いから','根が弱いから'],a:0,ex:'遺伝的多様性がないため、1つの病気に弱いと全個体が同じように弱い。有性生殖の利点と表裏一体。'},
+  {id:'b_t12',f:'bio',lv:'std',q:'ある池で肉食魚が減ったとき、直後に起こると考えられることはどれか。',ch:['えさとなる小魚が増える','小魚も減る','植物が減る','変化しない'],a:0,ex:'捕食者が減るとその獲物が一時的に増える。ただし増えすぎるとえさ不足で再び減り、全体としてつり合いが保たれる。'},
+  {id:'b_t13',f:'bio',lv:'hard',q:'丸い種子をつくる個体が純系（AA）か雑種（Aa）かを調べるには、何とかけ合わせればよいか。',ch:['しわの種子（aa）','丸い種子（AA）','自分自身','調べられない'],a:0,ex:'aaとかけ合わせる（検定交雑）。AAならすべて丸、Aaなら丸:しわ＝1:1になるので区別できる。'},
+  {id:'b_t14',f:'bio',lv:'hard',q:'植物を暗い箱に入れて数日おくと、葉のデンプンがなくなる。この理由はどれか。',ch:['光合成ができず、呼吸や成長で使われたから','デンプンが水に溶けたから','葉が枯れたから','デンプンが気体になったから'],a:0,ex:'光合成の実験では、あらかじめ暗所に置いてデンプンを消費させておく（これを行わないと結果が判断できない）。'},
+  {id:'b_t15',f:'bio',lv:'hard',q:'ヒトの血液が肺と全身を回るとき、酸素を最も多く含んでいる血管はどれか。',ch:['肺静脈','肺動脈','大静脈','右心房'],a:0,ex:'肺でガス交換を終えた血液が流れる肺静脈が最も酸素が多い。名前は「静脈」でも動脈血が流れる点が要注意。'},
+  {id:'e_t1',f:'earth',lv:'easy',q:'ねばりけの強いマグマの火山で噴火が激しくなりやすいのはなぜか。',ch:['ガスが抜けにくく内部に圧力がたまるから','温度が高いから','水が多いから','山が高いから'],a:0,ex:'ねばりけが強いと火山ガスが抜けにくく、圧力が高まって爆発的な噴火になりやすい。'},
+  {id:'e_t2',f:'earth',lv:'easy',q:'同じ地層が離れた2地点で見つかった。このことからわかることはどれか。',ch:['広い範囲に同時期に堆積したこと','2地点が同じ標高であること','地層が動いたこと','火山があったこと'],a:0,ex:'凝灰岩などのかぎ層は、離れた地点の地層を対比するのに使われる。'},
+  {id:'e_t3',f:'earth',lv:'easy',q:'川原の石が丸いのはなぜか。',ch:['運ばれる間に角がけずられたから','もともと丸いから','水にとけたから','熱で丸くなったから'],a:0,ex:'流水に運ばれる過程でぶつかり合い、角が取れて丸くなる。上流ほど角ばって大きい。'},
+  {id:'e_t4',f:'earth',lv:'easy',q:'地層に上下の逆転がないとき、下の層と上の層ではどちらが古いか。',ch:['下の層','上の層','同じ','わからない'],a:0,ex:'下から順に積もるので下が古い。ただし地殻変動で逆転することもあり、化石や級化構造で判断する。'},
+  {id:'e_t5',f:'earth',lv:'easy',q:'標高の高いところで水の沸点が100℃より低くなるのはなぜか。',ch:['大気圧が小さいから','気温が低いから','水が少ないから','空気が乾いているから'],a:0,ex:'沸騰は水蒸気の圧力が大気圧と等しくなったときに起こる。大気圧が小さいと低い温度で沸騰する。'},
+  {id:'e_t6',f:'earth',lv:'std',q:'夏の朝、地面近くに霧が発生することがある。この理由はどれか。',ch:['放射冷却で気温が露点以下になったから','気温が上がったから','風が強いから','気圧が上がったから'],a:0,ex:'晴れた夜は地面から熱が逃げて（放射冷却）気温が下がり、空気中の水蒸気が水滴になる。'},
+  {id:'e_t7',f:'earth',lv:'std',q:'山を越えた風が反対側でかわいた高温の風になる現象の理由はどれか。',ch:['上昇時に雨を降らせ、下降時に温度が上がるから','海の影響','気圧が同じだから','風が弱いから'],a:0,ex:'フェーン現象。上昇して雨を降らせた空気が、下降するとき圧縮されて温度が上がる。'},
+  {id:'e_t8',f:'earth',lv:'std',q:'冬の日本海側と太平洋側で天気が違う理由として正しいものはどれか。',ch:['季節風が日本海で水蒸気を含み、山で雪を降らせて乾いて越えるから','海流が違うから','緯度が違うから','気温が違うから'],a:0,ex:'日本海側は雪、山を越えた太平洋側は乾燥した晴れになる。'},
+  {id:'e_t9',f:'earth',lv:'std',q:'同じ時刻に観測した星が季節によって違うのはなぜか。',ch:['地球が公転して夜になる向きが変わるから','星が動くから','地球が自転するから','大気が変わるから'],a:0,ex:'公転により、夜側から見える方向の星座が季節ごとに変わる。'},
+  {id:'e_t10',f:'earth',lv:'std',q:'月が地球のまわりを回っているのに、いつも同じ面しか見えないのはなぜか。',ch:['月の自転周期と公転周期が同じだから','月が自転していないから','地球が動くから','月が止まっているから'],a:0,ex:'自転と公転が同じ約27.3日なので、地球からは常に同じ面が見える。'},
+  {id:'e_t11',f:'earth',lv:'hard',q:'ある地震で、震源から30km地点でP波が5秒後に到達した。震源から90km地点では何秒後か。',ch:['5秒','10秒','15秒','20秒'],a:2,ex:'P波の速さは30÷5＝6km/s。90÷6＝15秒。'},
+  {id:'e_t12',f:'earth',lv:'hard',q:'季節によって南中高度が変わるのに、赤道付近で気温の変化が小さいのはなぜか。',ch:['1年を通して太陽高度が高いから','海が近いから','自転が速いから','大気が厚いから'],a:0,ex:'赤道付近は年間を通して太陽が高く、受け取るエネルギー量の変化が小さい。'},
+  {id:'e_t13',f:'earth',lv:'hard',q:'露点が同じ2つの空気があるとき、含まれる水蒸気量の関係はどうなるか。',ch:['等しい','気温が高いほうが多い','気温が低いほうが多い','わからない'],a:0,ex:'露点は含まれる水蒸気量だけで決まる。気温が違っても露点が同じなら水蒸気量は同じで、湿度は異なる。'}
+];
+const LV={easy:{n:'基礎',d:'中1〜中2'},std:{n:'標準',d:'中3'},hard:{n:'入試',d:'高校受験'}};
+const FICON={phys:'⚡',chem:'🧪',bio:'🌱',earth:'🌍'};
+
+function load(){
+  try{const raw=localStorage.getItem(STORE_KEY);if(raw)return JSON.parse(raw);
+    const init={stats:{},best:{}};localStorage.setItem(STORE_KEY,JSON.stringify(init));return init;
+  }catch(e){if(!mem)mem={stats:{},best:{}};return mem;}
+}
+function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){mem=state;}}
+let state=load();
+if(!state.stats)state.stats={};
+if(!state.best)state.best={};
+if(state.xp==null)state.xp=0;
+if(state.maxCombo==null)state.maxCombo=0;
+if(!state.ach)state.ach=[];
+if(!state.streak)state.streak={day:'',count:0};
+if(state.taBest==null)state.taBest=0;
+if(!state.stat)state.stat={day:'',dayQ:0,fields:[],peakWeak:0};
+function bumpQ(){
+  const t=todayStr();
+  if(state.stat.day!==t){state.stat.day=t;state.stat.dayQ=0;}
+  state.stat.dayQ++;
+  const h=new Date().getHours();
+  if(h<5)unlock('nightowl'); else if(h<8)unlock('earlybird');
+  if(state.stat.dayQ>=50)unlock('marathon');
+  save();
+}
+if(!state.cards)state.cards=[];
+
+const EVO=[
+ {n:'はじめての観察者',e:'🔍'},{n:'ものさしを持つ人',e:'📏'},{n:'実験する人',e:'🧪'},
+ {n:'記録する人',e:'📓'},{n:'顕微鏡使い',e:'🔬'},{n:'電気を操る人',e:'⚡'},
+ {n:'磁石を操る人',e:'🧲'},{n:'温度を読む人',e:'🌡'},{n:'質量を量る人',e:'⚖️'},
+ {n:'光を追う人',e:'💡'},{n:'音を聴く人',e:'🔊'},{n:'力を見きわめる人',e:'🏋️'},
+ {n:'生命を観る人',e:'🌱'},{n:'大地を読む人',e:'🪨'},{n:'空を読む人',e:'☁️'},
+ {n:'星を追う人',e:'🌌'},{n:'分子を見る人',e:'🧬'},{n:'データを語る人',e:'📊'},
+ {n:'仮説を立てる人',e:'💭'},{n:'未知に挑む科学者',e:'🚀'},
+];
+function evoTitle(l){return EVO[Math.min(l,EVO.length)-1];}
+
+const CARDS=[
+ {id:'newton',r:'N',e:'🍎',n:'ニュートンとリンゴ',d:'万有引力の着想をリンゴから得たという逸話は本人の回想として伝わる。頭に落ちてきたという細部は後世の脚色とされる'},
+ {id:'archimedes',r:'N',e:'🛁',n:'アルキメデスと風呂',d:'浮力の原理をひらめいて「エウレカ（わかった）」と叫んだ話で有名。王冠が純金かを見抜く方法を求められていた'},
+ {id:'edison',r:'N',e:'💡',n:'エジソンと竹',d:'白熱電球のフィラメントに京都・八幡の竹が使われた。数千種の素材を試した末の選択だった'},
+ {id:'volta',r:'N',e:'🔋',n:'ボルタと電池',d:'2種類の金属と食塩水で電池を作った。電圧の単位ボルトは彼の名から'},
+ {id:'ampere',r:'N',e:'⚡',n:'アンペール',d:'電流と磁界の関係を数式で表した。電流の単位アンペアは彼の名から'},
+ {id:'ohm',r:'N',e:'🔌',n:'オーム',d:'電圧・電流・抵抗の関係を発見。発表当初は評価されず、教職を辞すほど冷遇された'},
+ {id:'pascal',r:'N',e:'🫧',n:'パスカル',d:'圧力の研究で知られ、圧力の単位パスカルに名を残す。「人間は考える葦である」の言葉も彼のもの'},
+ {id:'hooke',r:'N',e:'🪝',n:'フックとばね',d:'ばねの伸びが力に比例することを発見。細胞（cell）という言葉を最初に使ったのも彼'},
+ {id:'lavoisier',r:'N',e:'⚖️',n:'ラボアジエ',d:'質量保存の法則を確立し、燃焼が酸素との結合であることを示した。近代化学の父と呼ばれる'},
+ {id:'dalton',r:'N',e:'⚛️',n:'ドルトン',d:'原子説を提唱。物質は分割できない原子からできているとした'},
+ {id:'avogadro',r:'N',e:'🎈',n:'アボガドロ',d:'同じ体積の気体には同じ数の分子が含まれるという説を提唱した'},
+ {id:'mendel',r:'N',e:'🌱',n:'メンデルとエンドウ',d:'修道院の庭でエンドウを育て、遺伝の法則を発見。その価値が認められたのは死後35年ほど経ってからだった'},
+ {id:'darwin',r:'N',e:'🐢',n:'ダーウィンとガラパゴス',d:'ビーグル号の航海で島ごとに異なる生物を観察し、自然選択による進化を着想した'},
+ {id:'linne',r:'N',e:'📗',n:'リンネ',d:'生物を属名と種小名の2語で表す二名法を確立し、分類学の基礎を作った'},
+ {id:'wegener',r:'N',e:'🗺',n:'ウェゲナー',d:'大陸移動説を提唱。当初は仕組みを説明できず否定されたが、後にプレートテクトニクスとして復活した'},
+ {id:'galileo',r:'N',e:'🔭',n:'ガリレオ',d:'望遠鏡で木星の衛星を発見し、地動説の証拠とした。ピサの斜塔の実験は伝説の可能性が高い'},
+ {id:'faraday',r:'R',e:'🧲',n:'ファラデー',d:'電磁誘導を発見し発電機の原理を築いた。ほぼ独学で学び、製本屋の見習いから科学者になった'},
+ {id:'maxwell',r:'R',e:'🌊',n:'マクスウェル',d:'電気と磁気を統一的に記述し、光が電磁波であることを理論的に示した'},
+ {id:'hertz',r:'R',e:'📡',n:'ヘルツ',d:'電磁波の存在を実験で確認。振動数の単位ヘルツは彼の名から'},
+ {id:'curie',r:'R',e:'☢️',n:'キュリー夫妻',d:'ラジウムとポロニウムを発見。マリは女性初のノーベル賞受賞者で、物理学賞と化学賞の両方を受けた'},
+ {id:'rutherford',r:'R',e:'🎯',n:'ラザフォード',d:'金箔にα粒子を当てる実験で、原子の中心に小さく重い原子核があることを突き止めた'},
+ {id:'mendeleev',r:'R',e:'📋',n:'メンデレーエフ',d:'周期表を作った際、まだ発見されていない元素の場所を空欄にして性質まで予言した。のちにその通りの元素が見つかった'},
+ {id:'pasteur',r:'R',e:'🦠',n:'パスツール',d:'白鳥の首フラスコの実験で、微生物が自然に発生しないことを証明した'},
+ {id:'jenner',r:'R',e:'💉',n:'ジェンナー',d:'牛痘にかかった人が天然痘にならないことに気づき、種痘を開発した。ワクチンの語源は雌牛を意味するラテン語'},
+ {id:'watsoncrick',r:'R',e:'🧬',n:'DNAの二重らせん',d:'1953年にワトソンとクリックが構造を発表。ロザリンド・フランクリンのX線写真が決定的な手がかりだった'},
+ {id:'noguchi',r:'R',e:'🔬',n:'野口英世',d:'細菌学者として黄熱病の研究に取り組み、アフリカで自らも感染して亡くなった'},
+ {id:'kitasato',r:'R',e:'🧫',n:'北里柴三郎',d:'破傷風菌の純粋培養と血清療法を確立。日本の細菌学の礎を築いた'},
+ {id:'makino',r:'R',e:'🌿',n:'牧野富太郎',d:'独学で植物学を修め、生涯に約1500種類の植物を命名・発見した。日本の植物分類学の父'},
+ {id:'sakurajima',r:'SR',e:'🌋',n:'桜島の大正噴火',d:'1914年の噴火で流れ出た溶岩が海峡を埋め、それまで島だった桜島が大隅半島と陸続きになった'},
+ {id:'kanto',r:'SR',e:'📉',n:'地震計の原点',d:'日本は地震国であるため地震学が早くから発達した。世界初の実用的な地震計の開発にも日本の研究が関わっている'},
+ {id:'ozone',r:'SR',e:'🕳',n:'オゾンホール',d:'南極上空のオゾン層の穴は日本の南極観測隊が最初に気づいた。フロン規制へとつながった'},
+ {id:'hayabusa',r:'SR',e:'🛰',n:'はやぶさ',d:'小惑星イトカワの微粒子を持ち帰り、月以外の天体からのサンプルリターンに世界で初めて成功した'},
+ {id:'kamiokande',r:'SR',e:'💧',n:'カミオカンデ',d:'岐阜県の地下に作られた巨大な水槽。超新星からのニュートリノを検出し、ノーベル賞につながった'},
+ {id:'blueled',r:'SR',e:'🔵',n:'青色LED',d:'赤と緑は早くから作れたが、青は20世紀中は不可能とまで言われた。日本の研究者が実現し、白色LED照明が生まれた'},
+ {id:'periodic',r:'H',e:'🈁',n:'ニホニウム',d:'原子番号113の元素。理化学研究所が合成に成功し、アジアで初めて元素の命名権を得た。周期表に日本発の名前が載っている'},
+ {id:'coldwater',r:'H',e:'❄️',n:'ムペンバ効果',d:'条件によっては熱い水のほうが冷たい水より早く凍ることがあるとされる現象。再現性をめぐって現在も議論が続いている'},
+ {id:'sonic',r:'H',e:'🔔',n:'音の速さと温度',d:'音速は気温によって変わり、およそ331.5＋0.6×気温[℃] m/s。夏と冬では音の速さが10m/s以上違う'},
+ {id:'raincloud',r:'H',e:'☔',n:'雨粒の形',d:'雨粒は涙形ではなく、小さいものは球形、大きくなると空気の抵抗で下面がつぶれた饅頭形になる'},
+ {id:'gravity',r:'H',e:'🌏',n:'重力は場所で違う',d:'地球は完全な球ではなく自転もしているため、重力の大きさは緯度や標高でわずかに異なる。赤道より極のほうが少し大きい'},
+ {id:'starlight',r:'H',e:'✨',n:'星の光は過去の光',d:'星までの距離は光年で表す。1000光年先の星を見ることは、1000年前の姿を見ていることになる'},
+];
+function grantCard(){
+  const have=new Set(state.cards||[]);
+  const hid=CARDS.filter(c=>c.r==='H'&&!have.has(c.id));
+  if(hid.length&&Math.random()<0.04){
+    const pick=hid[Math.floor(Math.random()*hid.length)];
+    state.cards.push(pick.id);save();
+    setTimeout(()=>{toast('🔮 隠し図鑑を発見！ '+pick.e+' '+pick.n);pop(20);},1400);
+    return;
+  }
+  const pool=CARDS.filter(c=>c.r!=='H'&&!have.has(c.id));
+  if(!pool.length)return;
+  const W={N:6,R:3,SR:1};
+  let tot=0;pool.forEach(c=>tot+=W[c.r]);
+  let x=Math.random()*tot,pick=pool[0];
+  for(const c of pool){x-=W[c.r];if(x<=0){pick=c;break;}}
+  state.cards.push(pick.id);save();
+  setTimeout(()=>{toast('📖 図鑑に追加: '+pick.e+' '+pick.n+(pick.r==='SR'?'（超レア！）':pick.r==='R'?'（レア）':''));pop(pick.r==='SR'?20:10);},1400);
+}
+function cardsNormal(){return CARDS.filter(c=>c.r!=='H');}
+let curLv='all';
+
+const XPLV={easy:8,std:10,hard:14};
+const ACH=[
+ {id:'first',name:'はじめの一歩',desc:'クイズを1回クリア'},
+ {id:'combo5',name:'連鎖反応',desc:'5コンボ達成'},
+ {id:'combo10',name:'臨界突破',desc:'10コンボ達成'},
+ {id:'combo20',name:'超伝導',desc:'20コンボ達成'},
+ {id:'perfect',name:'完全結晶',desc:'10問クイズで全問正解'},
+ {id:'solve50',name:'観察者',desc:'50問に挑戦'},
+ {id:'solve100',name:'探究者',desc:'100問に挑戦'},
+ {id:'solveall',name:'全領域制覇',desc:'すべての問題に挑戦'},
+ {id:'phys50',name:'物理の使い手',desc:'物理で50問正解'},
+ {id:'chem50',name:'化学の使い手',desc:'化学で50問正解'},
+ {id:'bio50',name:'生物の使い手',desc:'生物で50問正解'},
+ {id:'earth50',name:'地学の使い手',desc:'地学で50問正解'},
+ {id:'hard50',name:'入試レベル攻略',desc:'入試レベルで50問正解'},
+ {id:'ta15',name:'反応速度',desc:'タイムアタック15問'},
+ {id:'ta20',name:'光速の思考',desc:'タイムアタック20問'},
+ {id:'streak3',name:'3日連続',desc:'3日連続で学習'},
+ {id:'streak7',name:'週間パーフェクト',desc:'7日連続で学習'},
+ {id:'streak14',name:'恒常性',desc:'14日連続で学習'},
+ {id:'streak30',name:'不変の法則',desc:'30日連続で学習'},
+ {id:'lv5',name:'Lv.5 到達',desc:'レベル5に到達'},
+ {id:'lv10',name:'Lv.10 到達',desc:'レベル10に到達'},
+ {id:'lv20',name:'Lv.20 到達',desc:'最高レベルに到達'},
+ {id:'cards10',name:'収集家',desc:'図鑑を10種あつめる'},
+ {id:'cards34',name:'博物館長',desc:'図鑑をコンプリート'},
+];
+const ACH_SECRET=[
+ {id:'nightowl',name:'夜行性',desc:'深夜0時〜4時に学習した'},
+ {id:'earlybird',name:'朝型生物',desc:'早朝5時〜7時に学習した'},
+ {id:'marathon',name:'持久力',desc:'1日に50問回答した'},
+ {id:'allfield',name:'四元素マスター',desc:'4分野すべてで学習した'},
+ {id:'comeback',name:'再結晶',desc:'苦手を10問ためてから0にした'},
+ {id:'secret',name:'未知との遭遇',desc:'隠し図鑑を手に入れた'},
+];
+function achAll(){return ACH.concat(ACH_SECRET);}
+function isSecret(id){return ACH_SECRET.some(a=>a.id===id);}
+const MAXLV=20;
+function xpNeed(l){return 40*l+2*l*l;}
+function lvlInfo(xp){
+  let l=1,acc=0,need=xpNeed(1);
+  while(l<MAXLV&&xp>=acc+need){acc+=need;l++;need=xpNeed(l);}
+  if(l>=MAXLV)return{level:MAXLV,cur:Math.max(0,xp-acc),need:xpNeed(MAXLV),max:true};
+  return{level:l,cur:xp-acc,need};
+}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function touchStreak(){
+  const t=todayStr();if(state.streak.day===t)return;
+  const y=new Date(Date.now()-864e5);
+  const ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+  state.streak.count=(state.streak.day===ys)?state.streak.count+1:1;
+  state.streak.day=t;save();
+  if(state.streak.count%7===0){toast('🔥 '+state.streak.count+'日連続達成！');grantCard();}
+  else if(state.streak.count>=2)toast('🔥 '+state.streak.count+'日連続！');
+  checkAch();
+}
+function addXp(n){
+  const before=lvlInfo(state.xp).level;
+  state.xp+=n;const after=lvlInfo(state.xp).level;save();
+  if(after>before){
+    pop(20);setTimeout(()=>toast('🎉 Lv.'+after+'！「'+evoTitle(after).n+'」に到達！'),350);
+    if(after%2===0)grantCard();   // 偶数レベルのみ
+  }
+  checkAch();
+}
+function unlock(id){
+  if(state.ach.includes(id))return;
+  state.ach.push(id);save();
+  const a=achAll().find(x=>x.id===id);
+  setTimeout(()=>toast((isSecret(id)?'🕵️ 隠し実績を発見: ':'🏅 実績解除: ')+(a?a.name:id)),700);
+  grantCard();
+}
+function iboCorrect(){let n=0;Q.forEach(q=>{if(q.lv==='ibo'&&state.stats[q.id])n+=state.stats[q.id].c;});return n;}
+function fieldCorrect(f){let n=0;Q.forEach(q=>{if(q.f===f&&state.stats[q.id])n+=state.stats[q.id].c;});return n;}
+function lvCorrect(lv){let n=0;Q.forEach(q=>{if(q.lv===lv&&state.stats[q.id])n+=state.stats[q.id].c;});return n;}
+function totalCorrect(){let n=0;Object.keys(state.stats).forEach(k=>n+=state.stats[k].c);return n;}
+function checkCardMilestone(){
+  if(!state.cardMile)state.cardMile=0;
+  const marks=[25,60,110,170,240,320,410,510,620,740];
+  let due=0; marks.forEach(m=>{if(totalCorrect()>=m)due++;});
+  while(state.cardMile<due){state.cardMile++;grantCard();}
+  save();
+}
+function checkAch(){
+  const solved=Object.keys(state.stats).length;
+  const lv=lvlInfo(state.xp).level;
+  if(state.maxCombo>=5)unlock('combo5');
+  if(state.maxCombo>=10)unlock('combo10');
+  if(state.maxCombo>=20)unlock('combo20');
+  if(solved>=50)unlock('solve50');
+  if(solved>=100)unlock('solve100');
+  if(solved>=Q.length)unlock('solveall');
+  [['phys','phys50'],['chem','chem50'],['bio','bio50'],['earth','earth50']]
+    .forEach(([f,id])=>{if(fieldCorrect(f)>=50)unlock(id);});
+  if(lvCorrect('hard')>=50)unlock('hard50');
+  if(state.taBest>=15)unlock('ta15');
+  if(state.taBest>=20)unlock('ta20');
+  [[3,'streak3'],[7,'streak7'],[14,'streak14'],[30,'streak30']]
+    .forEach(([n,id])=>{if(state.streak.count>=n)unlock(id);});
+  [[5,'lv5'],[10,'lv10'],[20,'lv20']].forEach(([n,id])=>{if(lv>=n)unlock(id);});
+  const cn=cardsNormal().filter(c=>state.cards.includes(c.id)).length;
+  if(cn>=10)unlock('cards10');
+  if(cn>=cardsNormal().length)unlock('cards34');
+  if(CARDS.some(c=>c.r==='H'&&state.cards.includes(c.id)))unlock('secret');
+  if(!state.stat.fields)state.stat.fields=[];
+  if(state.stat.fields.length>=4)unlock('allfield');
+  const wk=weak().length;
+  if(wk>state.stat.peakWeak)state.stat.peakWeak=wk;
+  if(state.stat.peakWeak>=10&&wk===0)unlock('comeback');
+}
+
+const $=id=>document.getElementById(id);
+const screen=$('screen');
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1700)}
+function pop(n){const p=document.createElement('div');p.className='pop';const e=['⭐','✨','🎉','💫','🧬'];
+  for(let i=0;i<(n||8);i++){const s=document.createElement('span');s.textContent=e[i%5];
+    s.style.setProperty('--dx',(Math.random()*260-130)+'px');s.style.setProperty('--dy',(-Math.random()*200-40)+'px');p.appendChild(s)}
+  document.body.appendChild(p);setTimeout(()=>p.remove(),820)}
+function fieldName(f){const o=FIELDS.find(x=>x[0]===f);return o?o[1]:f}
+function pool(field,lv){return Q.filter(q=>(field==='all'||q.f===field)&&(lv==='all'||q.lv===lv))}
+function weak(){return Q.filter(q=>{const s=state.stats[q.id];return s&&s.w>0&&s.c<=s.w})}
+function rankOf(p){return p>=95?'S':p>=85?'A':p>=70?'B':p>=50?'C':'D'}
+
+function renderHome(){
+  const ids=Object.keys(state.stats);
+  const solved=ids.length;
+  let c=0,t=0;
+  ids.forEach(k=>{c+=state.stats[k].c;t+=state.stats[k].c+state.stats[k].w});
+  const rate=t?Math.round(c/t*100):0;
+  const C=2*Math.PI*40,off=C*(1-solved/Q.length);
+  $('rankPill').textContent='総合 '+(t?rankOf(rate):'--');
+  const lvs=['all','easy','std','hard'].map(k=>{
+    const n=k==='all'?'すべて':LV[k].n, d=k==='all'?'全レベル':LV[k].d;
+    return `<div class="lvbtn ${curLv===k?'on':''}" onclick="setLv('${k}')"><span class="n">${n}</span><span class="d">${d}</span></div>`;
+  });
+  // 4つ並ぶので grid を4分割に
+  const fs=FIELDS.map(([id,name])=>{
+    const all=pool(id,curLv).length;
+    const done=pool(id,curLv).filter(q=>state.stats[q.id]).length;
+    const pct=all?Math.round(done/all*100):0;
+    return `<div class="fbtn" onclick="startQuiz('${id}')"><div class="ic">${FICON[id]||'🧫'}</div>
+      <div class="n">${name}</div><div class="m">${all}問中 ${done}問クリア</div>
+      <div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  }).join('');
+  const wk=weak().length;
+  screen.innerHTML=`
+    <div class="statcard">
+      <div class="ring"><svg width="92" height="92">
+        <circle cx="46" cy="46" r="40" fill="none" stroke="var(--border)" stroke-width="9"/>
+        <circle cx="46" cy="46" r="40" fill="none" stroke="var(--primary)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/>
+      </svg><div class="in"><b>${solved}</b><small>/${Q.length}問</small></div></div>
+      <div class="stinfo"><h2>学習のきろく</h2>
+        <div class="row"><div>正答率<b>${rate}%</b></div><div>ランク<b>${t?rankOf(rate):'--'}</b></div></div></div>
+    </div>
+    <div class="statcard" style="padding:14px 20px;gap:12px;cursor:pointer" onclick="renderTitles()">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-family:Poppins;font-weight:800;font-size:18px;color:var(--accent)">Lv.${lvlInfo(state.xp).level}</span> <span style="font-size:12px;font-weight:800;color:var(--primary)">${evoTitle(lvlInfo(state.xp).level).e} ${evoTitle(lvlInfo(state.xp).level).n}</span>
+          <span style="font-size:11px;color:var(--sub);font-weight:700">${state.streak.count>=2?'🔥 '+state.streak.count+'日連続 ›':'探究の記録 ›'}</span>
+        </div>
+        <div class="bar-top" style="margin:0 0 4px"><i style="width:${lvlInfo(state.xp).max?100:lvlInfo(state.xp).cur/lvlInfo(state.xp).need*100}%"></i></div>
+        <div style="font-size:10px;color:var(--sub);font-weight:700;text-align:right">${lvlInfo(state.xp).max?'最高到達！ 累計 '+state.xp.toLocaleString()+' XP':'あと '+(lvlInfo(state.xp).need-lvlInfo(state.xp).cur).toLocaleString()+' XP でレベルアップ'}</div>
+      </div>
+    </div>
+    <button class="btn btn-ghost" style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center" onclick="renderZukan()"><span>📖 科学の図鑑</span><span style="font-family:Poppins;font-weight:800;color:var(--accent)">${cardsNormal().filter(c=>state.cards.includes(c.id)).length}/${cardsNormal().length}</span></button>
+    <div class="statcard" style="display:block;padding:16px 18px">
+      <h2 style="font-size:13px;font-weight:900;margin-bottom:10px">📊 難易度べつのきろく</h2>
+      ${['easy','std','hard'].map(k=>{
+        const qs=Q.filter(q=>q.lv===k);
+        const done=qs.filter(q=>state.stats[q.id]).length;
+        let c=0,t=0;qs.forEach(q=>{const st=state.stats[q.id];if(st){c+=st.c;t+=st.c+st.w;}});
+        const rate=t?Math.round(c/t*100):0;
+        const pct=qs.length?done/qs.length*100:0;
+        return `<div class="lvstat"><span class="ln lv-${k}">${LV[k].n}</span><div class="lb"><i class="lv-${k}" style="width:${pct}%"></i></div><span class="lnum">${done}/${qs.length}</span><span class="lrate">${t?rate+'%':'--'}</span></div>`;
+      }).join('')}
+    </div>
+    <div class="label">🎚 難易度をえらぶ</div>
+    <div class="lvrow" style="grid-template-columns:repeat(4,1fr)">${lvs.join('')}</div>
+    <div class="label">⚔️ チャレンジ</div>
+    <div class="row2" style="margin-bottom:10px">
+      <button class="btn btn-primary" onclick="startQuiz('all')">🎲 ミックス10問</button>
+      <button class="btn btn-accent" onclick="startQuiz('all',true)">⏱ タイムアタック</button>
+    </div>
+    ${wk?`<button class="btn btn-ghost" style="margin-bottom:10px" onclick="startQuiz('weak')">🔁 苦手だけ復習（${wk}問）</button>`:''}
+    <div class="label">🧫 分野べつ</div>
+    <div class="fields">${fs}</div>
+    <div class="label">🏅 実績（${ACH.filter(a=>state.ach.includes(a.id)).length}/${ACH.length}）</div>
+    <div class="ach-grid">
+      ${ACH.map(a=>{const got=state.ach.includes(a.id);
+        return `<div class="achb ${got?'got':''}"><div class="an">${got?'🏅':'🔒'} ${a.name}</div><div class="ad">${a.desc}</div></div>`;}).join('')}
+    </div>
+    ${(()=>{const f=ACH_SECRET.filter(a=>state.ach.includes(a.id));
+      return f.length?`<div class="label">🕵️ 隠し実績（${f.length}）</div><div class="ach-grid">${
+        f.map(a=>`<div class="achb got" style="border-color:#7B8BFF"><div class="an">🕵️ ${a.name}</div><div class="ad">${a.desc}</div></div>`).join('')}</div>`:'';})()}
+    <p class="help">難易度を選ぶと、分野べつ・ミックスの出題がそのレベルにしぼられるよ。XPは難しい問題ほど多くもらえる（入試レベルは1問14XP）。</p>`;
+}
+function setLv(k){curLv=k;renderHome();}
+function renderTitles(){
+  const lv=lvlInfo(state.xp).level;
+  const rows=EVO.map((t,i)=>{
+    const n=i+1, got=n<=lv, cur=n===lv;
+    const need=(()=>{let acc=0;for(let k=1;k<n;k++)acc+=xpNeed(k);return acc;})();
+    return `<div class="evr ${got?'got':''} ${cur?'cur':''}">
+      <span class="evn">${n}</span>
+      <span class="eve">${got?t.e:'🔒'}</span>
+      <div class="evb">
+        <div class="evt">${got?esc(t.n):'？？？'}</div>
+        <div class="evd">${cur?'いまここ':got?'到達済み':'必要 '+need.toLocaleString()+' XP'}</div>
+      </div>
+    </div>`;
+  }).join('');
+  screen.innerHTML=`
+    <button class="back" onclick="renderHome()">‹ 戻る</button>
+    <div class="qhead"><h2>🔬 探究の記録</h2><span class="combo" style="color:var(--accent)">${lv}/${EVO.length}</span></div>
+    <p class="help" style="margin-bottom:12px">レベルが上がるたびに称号が変わる。観察から始まり、実験・測定を経て、未知に挑む科学者へ。</p>
+    ${rows}
+    <button class="btn btn-ghost" style="margin-top:10px" onclick="renderHome()">ホームに戻る</button>`;
+}
+function renderZukan(){
+  const have=new Set(state.cards);
+  const norm=cardsNormal();
+  const got=norm.filter(c=>have.has(c.id)).length;
+  const sec=(r,label)=>{
+    const cs=CARDS.filter(c=>c.r===r);
+    return `<div class="label">${label}（${cs.filter(c=>have.has(c.id)).length}/${cs.length}）</div>`+
+      cs.map(c=>have.has(c.id)
+        ?`<div class="zkr got"><span class="zke">${c.e}</span><div class="zkb"><div class="zkn">${c.n} <span class="zktag ${c.r}">${c.r==='SR'?'超レア':c.r==='R'?'レア':'ふつう'}</span></div><div class="zkd">${c.d}</div></div></div>`
+        :`<div class="zkr"><span class="zke">🔒</span><div class="zkb"><div class="zkn" style="color:var(--sub)">？？？</div><div class="zkd">レベルアップ・実績・正解数の節目で手に入る</div></div></div>`).join('');
+  };
+  const hid=CARDS.filter(c=>c.r==='H'&&have.has(c.id));
+  const hidSec=hid.length?`<div class="label">🔮 隠し図鑑（${hid.length}）</div>`+
+    hid.map(c=>`<div class="zkr got" style="border-color:#7B8BFF"><span class="zke">${c.e}</span><div class="zkb"><div class="zkn">${c.n} <span class="zktag H">隠し</span></div><div class="zkd">${c.d}</div></div></div>`).join(''):'';
+  screen.innerHTML=`
+    <button class="back" onclick="renderHome()">‹ 戻る</button>
+    <div class="qhead"><h2>📖 科学の図鑑</h2><span class="combo" style="color:var(--accent)">${got}/${norm.length} 発見</span></div>
+    ${got>=norm.length?'<div class="statcard" style="justify-content:center"><b style="color:var(--accent)">🏆 コンプリート！</b></div>':''}
+    <p class="help" style="margin-bottom:10px">科学者や発見にまつわる豆知識を集める図鑑。レベルアップ（2つごと）・実績解除・正解数の節目・7日連続学習で手に入る。</p>
+    ${hidSec}
+    ${sec('SR','⭐ 超レア')}
+    ${sec('R','🔹 レア')}
+    ${sec('N','・ ふつう')}`;
+}
+
+let g={list:[],i:0,score:0,miss:[],answered:false,combo:0,maxCombo:0,ta:false,t:0,timer:null,field:'all'};
+function startQuiz(field,ta){
+  let list;
+  if(field==='weak'){list=shuffle(weak());if(!list.length){toast('苦手はまだないよ');return;}list=list.slice(0,10);}
+  else{list=pool(field,curLv);
+    if(list.length<4){toast('この条件の問題が足りないよ');return;}
+    list=shuffle(list).slice(0,ta?15:10);}
+  g={list,i:0,score:0,miss:[],answered:false,combo:0,maxCombo:0,ta:!!ta,t:ta?20:0,timer:null,field};
+  renderQuiz();
+}
+function renderQuiz(){
+  if(g.i>=g.list.length)return finish();
+  clearInterval(g.timer);
+  const q=g.list[g.i];g.answered=false;
+  if(g.ta)g.t=20;
+  const opts=shuffle(q.ch.map((c,k)=>({c,k})));
+  screen.innerHTML=`
+    <button class="back" onclick="quitQuiz()">‹ もどる</button>
+    <div class="qhead"><div class="left"><h2>${g.ta?'⏱ タイムアタック':'🧫 クイズ'}</h2>
+      ${g.combo>=2?`<span class="combo">🔥 ${g.combo}コンボ</span>`:''}</div>
+      ${g.ta?`<span class="timer" id="tm">${g.t}</span>`:`<span class="combo">${g.i+1}/${g.list.length}</span>`}</div>
+    <div class="bar-top"><i style="width:${g.i/g.list.length*100}%"></i></div>
+    <div class="qcard">
+      <div class="qmeta"><span class="tagf">${esc(fieldName(q.f))}</span><span class="taglv ${q.lv}">${LV[q.lv].n}</span></div>
+      <div class="qtext">${esc(q.q)}</div>
+    </div>
+    <div class="choices">${opts.map(o=>`<button class="choice" data-k="${o.k}" onclick="answer(${o.k})">${esc(o.c)}</button>`).join('')}</div>
+    <div id="fb"></div>`;
+  if(g.ta){g.timer=setInterval(()=>{g.t--;const el=$('tm');
+    if(el){el.textContent=g.t;if(g.t<=5)el.classList.add('warn');}
+    if(g.t<=0){clearInterval(g.timer);if(!g.answered)answer(-1);}},1000);}
+}
+function answer(k){
+  if(g.answered)return;g.answered=true;clearInterval(g.timer);
+  const q=g.list[g.i],ok=k===q.a;
+  document.querySelectorAll('.choice').forEach(b=>{const kk=+b.dataset.k;
+    if(kk===q.a)b.classList.add('correct');else if(kk===k)b.classList.add('wrong');else b.classList.add('dim');b.onclick=null;});
+  const st=state.stats[q.id]||{c:0,w:0};
+  bumpQ();
+  if(ok)setTimeout(checkCardMilestone,50);
+  if(!state.stat.fields)state.stat.fields=[];
+  if(!state.stat.fields.includes(q.f)){state.stat.fields.push(q.f);}
+  if(ok){g.score++;g.combo++;g.maxCombo=Math.max(g.maxCombo,g.combo);
+    if(g.combo>state.maxCombo)state.maxCombo=g.combo;
+    st.c++;
+    addXp(XPLV[q.lv]+(g.combo>=5?10:g.combo>=3?5:0));touchStreak();
+    pop(g.combo>=3?14:8);}
+  else{g.combo=0;g.miss.push(q);st.w++;}
+  state.stats[q.id]=st;save();
+  const head=k===-1?'⏰ 時間切れ':(ok?'⭕ 正解':'❌ 不正解');
+  $('fb').innerHTML=`<div class="exp"><b>${head}</b>　${esc(q.ex)}</div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="next()">次へ ›</button>`;
+  $('fb').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function next(){g.i++;renderQuiz();}
+function quitQuiz(){clearInterval(g.timer);renderHome();}
+function finish(){
+  clearInterval(g.timer);
+  const total=g.list.length,rate=Math.round(g.score/total*100),rk=rankOf(rate);
+  const key=(g.field||'all')+'_'+curLv+(g.ta?'_ta':'');
+  const prev=state.best[key]||0;const isBest=g.score>prev;
+  if(isBest){state.best[key]=g.score;save();}
+  unlock('first');
+  if(g.ta&&g.score>state.taBest){state.taBest=g.score;save();}
+  if(!g.ta&&total>=10&&g.score===total)unlock('perfect');
+  checkAch();
+  const msg={S:'完璧！文句なし',A:'すばらしい理解度',B:'いい調子、あと少し',C:'解説を読んで固めよう',D:'まずは易しめから'}[rk];
+  const miss=g.miss.length?`<div class="label" style="margin-top:4px">まちがえた問題</div>
+    <div class="misslist">${g.miss.map(q=>`<div class="r"><div class="q">${esc(q.q)}</div><div class="a">正解: ${esc(q.ch[q.a])}</div></div>`).join('')}</div>`:'';
+  screen.innerHTML=`
+    <button class="back" onclick="renderHome()">‹ もどる</button>
+    <div class="result">
+      <div class="rank">${rk}</div>
+      <div class="big">${g.score}<span style="font-size:22px;color:var(--sub)">/${total}</span></div>
+      <h2>${msg}</h2>
+      <p>正答率 ${rate}% ／ 最大 ${g.maxCombo} コンボ</p>
+      ${isBest?'<p style="color:var(--accent);font-weight:800">🏅 自己ベスト更新！</p>':`<p>この条件のベスト: ${Math.max(prev,g.score)}問</p>`}
+    </div>
+    ${miss}
+    <div class="row2" style="margin-top:8px">
+      <button class="btn btn-ghost" onclick="renderHome()">ホーム</button>
+      <button class="btn btn-primary" onclick="startQuiz('${g.field}',${g.ta})">もう一回</button>
+    </div>`;
+  if(rate>=85)setTimeout(()=>pop(18),200);
+}
+renderHome();
+</script>
+</body>
+</html>
