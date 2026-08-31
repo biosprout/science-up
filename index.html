@@ -60,6 +60,27 @@
   .daily .dbar i{display:block;height:100%;background:currentColor;border-radius:99px}
   .daily .dgo{font-size:12px;font-weight:800;background:rgba(255,255,255,.22);
     padding:8px 12px;border-radius:999px;flex:0 0 auto;white-space:nowrap}
+  .ansbox{margin-top:16px;border:2px solid var(--border);border-radius:14px;padding:14px 16px;
+    display:flex;align-items:center;justify-content:center;gap:8px;background:var(--panel2);min-height:60px}
+  .ansbox .v{font-family:'Poppins';font-size:28px;font-weight:800;color:var(--text);letter-spacing:1px;min-width:20px;text-align:right}
+  .ansbox .u{font-size:15px;font-weight:800;color:var(--sub)}
+  .ansbox.ok{border-color:var(--primary);background:#E8F4EC}
+  .ansbox.ng{border-color:var(--danger);background:#FDECEE}
+  .cursor{display:inline-block;width:2px;height:24px;background:var(--primary);vertical-align:-4px;animation:bl 1s step-end infinite}
+  @keyframes bl{50%{opacity:0}}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+  .pad button{padding:16px 0;border-radius:14px;border:1.5px solid var(--border);background:var(--panel);
+    font-family:'Poppins';font-size:20px;font-weight:800;color:var(--text);cursor:pointer}
+  .pad button:active{transform:scale(.96)}
+  .pad button.fn{background:var(--panel2);font-size:17px}
+  .catrow{display:flex;align-items:center;font-size:12px;font-weight:700;padding:7px 0;border-bottom:1px solid var(--border)}
+  .catrow:last-child{border:0}
+  .catrow .cn{flex:0 0 auto;max-width:52%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .catbar{height:6px;border-radius:99px;background:var(--border);overflow:hidden;flex:1;margin:0 10px}
+  .catbar i{display:block;height:100%;border-radius:99px;background:var(--primary)}
+  .catbar i.bad{background:var(--danger)}
+  .catbar i.mid{background:var(--accent)}
+  .catrow .cv{font-family:'Poppins';flex:0 0 auto;color:var(--sub)}
   .label{font-size:12px;font-weight:800;color:var(--sub);margin:10px 2px 10px;letter-spacing:.3px}
   .lvrow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:6px}
   .lvbtn{background:var(--panel);border:1.5px solid var(--border);border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:.15s}
@@ -619,6 +640,9 @@ if(!state.ach)state.ach=[];
 if(!state.streak)state.streak={day:'',count:0};
 if(state.taBest==null)state.taBest=0;
 if(!state.stat)state.stat={day:'',dayQ:0,fields:[],peakWeak:0};
+if(!state.cstat)state.cstat={};
+if(state.calcDone==null)state.calcDone=0;
+if(state.dailyDone==null)state.dailyDone=0;
 function bumpQ(){
   const t=todayStr();
   if(state.stat.day!==t){state.stat.day=t;state.stat.dayQ=0;}
@@ -804,6 +828,8 @@ const ACH_SECRET=[
  {id:'allfield',name:'四元素マスター',desc:'4分野すべてで学習した'},
  {id:'comeback',name:'再結晶',desc:'苦手を10問ためてから0にした'},
  {id:'secret',name:'未知との遭遇',desc:'隠し図鑑を手に入れた'},
+ {id:'calcperfect',name:'計算名人',desc:'理科の計算を全問正解した'},
+ {id:'calc10',name:'式で考える人',desc:'理科の計算を10回やった'},
  {id:'daily7',name:'日課',desc:'今日の10問を7回やりきった'},
  {id:'daily30',name:'習慣化',desc:'今日の10問を30回やりきった'},
 ];
@@ -860,6 +886,7 @@ function checkCardMilestone(){
 function checkAch(){
   const solved=Object.keys(state.stats).length;
   const lv=lvlInfo(state.xp).level;
+  if((state.calcDone||0)>=10)unlock('calc10');
   if((state.dailyDone||0)>=7)unlock('daily7');
   if((state.dailyDone||0)>=30)unlock('daily30');
   if(state.maxCombo>=5)unlock('combo5');
@@ -904,7 +931,7 @@ function pool(field,lv){return Q.filter(q=>(field==='all'||q.f===field)&&(lv==='
 function weak(){return Q.filter(q=>{const s=state.stats[q.id];return s&&s.w>0&&s.c<=s.w})}
 function rankOf(p){return p>=95?'S':p>=85?'A':p>=70?'B':p>=50?'C':'D'}
 
-const APP_VER='20260831a';
+const APP_VER='20260831b';
 function forceUpdate(){ location.replace(location.origin+location.pathname+'?v='+Date.now()); }
 async function checkUpdate(silent){
   try{
@@ -923,7 +950,8 @@ async function checkUpdate(silent){
 function exportProgress(){
   return JSON.stringify({v:1,ver:APP_VER,d:{xp:state.xp,maxCombo:state.maxCombo,ach:state.ach,
     cards:state.cards,cardCount:state.cardCount,stats:state.stats,best:state.best,streak:state.streak,
-    taBest:state.taBest,cardMile:state.cardMile,stat:state.stat}});
+    taBest:state.taBest,cardMile:state.cardMile,stat:state.stat,
+    cstat:state.cstat,calcDone:state.calcDone,dailyDone:state.dailyDone}});
 }
 function copyProgress(){
   const t=exportProgress();
@@ -947,6 +975,8 @@ function importProgress(){
   state.cards=d.cards||[]; state.stats=d.stats||{}; state.best=d.best||{};
   state.streak=d.streak||{day:'',count:0}; state.taBest=d.taBest||0;
   state.cardMile=d.cardMile||0; if(d.stat)state.stat=d.stat;
+  state.cstat=d.cstat||{}; state.calcDone=d.calcDone||0; state.dailyDone=d.dailyDone||0;
+  state.daily=null;
   save(); toast('記録を復元しました ✓'); renderHome();
 }
 function renderBackup(){
@@ -1028,6 +1058,7 @@ function renderHome(){
       <button class="btn btn-primary" onclick="startQuiz('all')">🎲 ミックス10問</button>
       <button class="btn btn-accent" onclick="startQuiz('all',true)">⏱ タイムアタック（60秒）</button>
     </div>
+    <button class="btn btn-primary" style="margin-bottom:10px" onclick="startCalc()">🧮 理科の計算 ${CALC_N}問（答えを自分で書く）</button>
     ${wk?`<button class="btn btn-ghost" style="margin-bottom:10px" onclick="startQuiz('weak')">🔁 苦手だけ復習（${wk}問）</button>`:''}
     <div class="label">🧫 分野べつ</div>
     <div class="fields">${fs}</div>
@@ -1039,7 +1070,7 @@ function renderHome(){
     ${(()=>{const f=ACH_SECRET.filter(a=>state.ach.includes(a.id));
       return f.length?`<div class="label">🕵️ 隠し実績（${f.length}）</div><div class="ach-grid">${
         f.map(a=>`<div class="achb got" style="border-color:#5A68D8"><div class="an">🕵️ ${a.name}</div><div class="ad">${a.desc}</div></div>`).join('')}</div>`:'';})()}
-    <p class="help">難易度を選ぶと、分野べつ・ミックスの出題がそのレベルにしぼられるよ。XPは難しい問題ほど多くもらえる（入試レベルは1問14XP）。</p>
+    <p class="help">「理科の計算」は問題をその場で作るので、何度やっても新しい数字が出るよ。難易度を選ぶと、分野べつ・ミックス・計算の出題がそのレベルにしぼられるよ。XPは難しい問題ほど多くもらえる（入試レベルは1問14XP）。</p>
     <div style="display:flex;gap:8px;margin-top:16px">
       <button class="btn btn-ghost" style="flex:1;font-size:12px;padding:11px" onclick="checkUpdate(false)">🔄 更新を確認</button>
       <button class="btn btn-ghost" style="flex:1;font-size:12px;padding:11px" onclick="renderBackup()">💾 記録の保存</button>
@@ -1094,6 +1125,246 @@ function renderZukan(){
 }
 
 let g={list:[],i:0,score:0,miss:[],answered:false,combo:0,maxCombo:0,ta:false,t:0,timer:null,field:'all'};
+/* ===================== 理科の計算 =====================
+   問題文をデータで持たず、その場で数字を作る。だから何回でも新しい問題が出る。
+   答えは4択ではなく自分で数値を入力する。                            */
+function cRnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function cPick(a){return a[Math.floor(Math.random()*a.length)];}
+function r1(x){return Math.round(x*10)/10;}
+function r2(x){return Math.round(x*100)/100;}
+const CALC={
+ ohm_v:{lv:'easy',f:'phys',n:'オームの法則（電圧）',mk:()=>{
+   const I=cPick([0.2,0.4,0.5,1,2,3]),R=cPick([5,10,15,20,25,30,40,50]);
+   return{q:`抵抗 ${R}Ω に ${I}A の電流が流れているとき、加わっている電圧は何 V か。`,
+     a:r1(I*R),u:'V',ex:`V = I × R = ${I} × ${R} = ${r1(I*R)} V`};}},
+ ohm_i:{lv:'easy',f:'phys',n:'オームの法則（電流）',mk:()=>{
+   const I=cPick([0.2,0.5,1,1.5,2,3]),R=cPick([4,5,10,12,20,25,30]);
+   return{q:`抵抗 ${R}Ω に ${r1(I*R)}V の電圧を加えたとき、流れる電流は何 A か。`,
+     a:I,u:'A',ex:`I = V ÷ R = ${r1(I*R)} ÷ ${R} = ${I} A`};}},
+ ohm_r:{lv:'easy',f:'phys',n:'オームの法則（抵抗）',mk:()=>{
+   const I=cPick([0.2,0.5,1,2,3]),R=cPick([5,10,15,20,25,30,40]);
+   return{q:`ある抵抗に ${r1(I*R)}V の電圧を加えたら ${I}A の電流が流れた。抵抗の大きさは何 Ω か。`,
+     a:R,u:'Ω',ex:`R = V ÷ I = ${r1(I*R)} ÷ ${I} = ${R} Ω`};}},
+ res_series:{lv:'easy',f:'phys',n:'直列の合成抵抗',mk:()=>{
+   const a=cPick([5,10,15,20,25,30]),b=cPick([5,10,15,20,25,30]);
+   return{q:`${a}Ω と ${b}Ω の抵抗を直列につないだとき、全体の抵抗は何 Ω か。`,
+     a:a+b,u:'Ω',ex:`直列はそのまま足す。${a} + ${b} = ${a+b} Ω`};}},
+ res_para:{lv:'std',f:'phys',n:'並列の合成抵抗',mk:()=>{
+   const p=cPick([[10,10,5],[20,20,10],[20,30,12],[6,12,4],[30,60,20],[10,15,6],[12,24,8],[5,20,4],[9,18,6],[40,40,20]]);
+   return{q:`${p[0]}Ω と ${p[1]}Ω の抵抗を並列につないだとき、全体の抵抗は何 Ω か。`,
+     a:p[2],u:'Ω',ex:`1/R = 1/${p[0]} + 1/${p[1]} より R = ${p[2]} Ω。並列はどちらより小さくなる。`};}},
+ power:{lv:'std',f:'phys',n:'電力',mk:()=>{
+   const V=cPick([3,6,9,12,100]),I=cPick([0.5,1,2,3,5]);
+   return{q:`${V}V の電圧で ${I}A の電流が流れる電熱線の電力は何 W か。`,
+     a:r1(V*I),u:'W',ex:`P = V × I = ${V} × ${I} = ${r1(V*I)} W`};}},
+ energy:{lv:'std',f:'phys',n:'電力量',mk:()=>{
+   const P=cPick([40,60,100,500,1000]),m=cPick([1,2,3,5,10]);
+   return{q:`${P}W の電気器具を ${m}分間 使ったときの電力量は何 J か。`,
+     a:P*m*60,u:'J',ex:`W = P × t（秒）= ${P} × ${m*60} = ${P*m*60} J`};}},
+ pressure:{lv:'easy',f:'phys',n:'圧力',mk:()=>{
+   const S=cPick([0.2,0.25,0.5,2,4]),P=cPick([100,200,250,400,500]);
+   return{q:`面積 ${S}m² の面を ${r1(P*S)}N の力で垂直に押したときの圧力は何 Pa か。`,
+     a:P,u:'Pa',ex:`圧力 = 力 ÷ 面積 = ${r1(P*S)} ÷ ${S} = ${P} Pa`};}},
+ speed:{lv:'easy',f:'phys',n:'速さ',mk:()=>{
+   const v=cPick([2,3,4,5,8,10,15,20]),t=cPick([4,5,6,10,12,20]);
+   return{q:`${v*t}m を ${t}秒 で進んだときの速さは何 m/s か。`,
+     a:v,u:'m/s',ex:`速さ = 距離 ÷ 時間 = ${v*t} ÷ ${t} = ${v} m/s`};}},
+ spring:{lv:'easy',f:'phys',n:'ばねののび',mk:()=>{
+   const per=cPick([1,2,2.5,4,5]),g1=cPick([20,50,100]),k=cPick([2,3,4,5]);
+   return{q:`${g1}g のおもりで ${per}cm のびるばねに、${g1*k}g のおもりをつるすと何 cm のびるか。`,
+     a:r1(per*k),u:'cm',ex:`のびは力の大きさに比例する。${per} × ${k} = ${r1(per*k)} cm`};}},
+ work:{lv:'hard',f:'phys',n:'仕事',mk:()=>{
+   const F=cPick([5,10,15,20,25,40,50]),d=cPick([2,3,4,5,8,10]);
+   return{q:`${F}N の力で物体を力の向きに ${d}m 動かしたときの仕事は何 J か。`,
+     a:F*d,u:'J',ex:`仕事 = 力 × 動いた距離 = ${F} × ${d} = ${F*d} J`};}},
+ work_power:{lv:'hard',f:'phys',n:'仕事率',mk:()=>{
+   const p=cPick([5,10,15,20,30,50]),t=cPick([2,3,4,5,6]);
+   return{q:`${p*t}J の仕事を ${t}秒 でしたときの仕事率は何 W か。`,
+     a:p,u:'W',ex:`仕事率 = 仕事 ÷ 時間 = ${p*t} ÷ ${t} = ${p} W`};}},
+ buoyancy:{lv:'hard',f:'phys',n:'浮力',mk:()=>{
+   const a=cPick([2,3,4,5,6,8]),b=cPick([0.5,1,1.5,2]);
+   return{q:`空気中で ${a}N を示す物体を水に入れると ${r1(a-b)}N を示した。はたらいている浮力は何 N か。`,
+     a:b,u:'N',ex:`浮力 = 空気中の重さ − 水中の重さ = ${a} − ${r1(a-b)} = ${b} N`};}},
+ density:{lv:'easy',f:'chem',n:'密度',mk:()=>{
+   const d=cPick([0.9,1,2.5,2.7,7.9,8.9,11.3]),V=cPick([5,10,20,50]);
+   return{q:`体積 ${V}cm³、質量 ${r1(d*V)}g の物質の密度は何 g/cm³ か。`,
+     a:d,u:'g/cm³',ex:`密度 = 質量 ÷ 体積 = ${r1(d*V)} ÷ ${V} = ${d} g/cm³`};}},
+ percent:{lv:'easy',f:'chem',n:'質量パーセント濃度',mk:()=>{
+   const p=cPick([5,10,20,25,40]),tot=cPick([50,100,200,400]);
+   const so=tot*p/100;
+   return{q:`水 ${tot-so}g に食塩 ${so}g をとかした水溶液の質量パーセント濃度は何 % か。`,
+     a:p,u:'%',ex:`溶質 ÷ 水溶液全体 × 100 = ${so} ÷ ${tot} × 100 = ${p} %`};}},
+ percent_rev:{lv:'std',f:'chem',n:'濃度から溶質の質量',mk:()=>{
+   const p=cPick([5,10,20,25]),tot=cPick([100,200,300,400]);
+   return{q:`質量パーセント濃度 ${p}% の食塩水 ${tot}g にとけている食塩は何 g か。`,
+     a:tot*p/100,u:'g',ex:`${tot} × ${p} ÷ 100 = ${tot*p/100} g`};}},
+ massratio:{lv:'std',f:'chem',n:'化学変化の質量比',mk:()=>{
+   if(cRnd(0,1)){const cu=cPick([0.4,0.8,1.2,1.6,2.0,2.4]);
+     return{q:`銅 ${cu}g を完全に酸化させると、酸化銅は何 g できるか。（銅:酸素 = 4:1）`,
+       a:r2(cu*1.25),u:'g',ex:`結びつく酸素は ${r2(cu/4)}g。${cu} + ${r2(cu/4)} = ${r2(cu*1.25)} g`};}
+   const mg=cPick([0.3,0.6,0.9,1.2,1.5]);
+   return{q:`マグネシウム ${mg}g を完全に燃焼させると、酸化マグネシウムは何 g できるか。（Mg:酸素 = 3:2）`,
+     a:r2(mg*5/3),u:'g',ex:`結びつく酸素は ${r2(mg*2/3)}g。${mg} + ${r2(mg*2/3)} = ${r2(mg*5/3)} g`};}},
+ humidity:{lv:'std',f:'earth',n:'湿度',mk:()=>{
+   const T=cPick([[10,9.4],[15,12.8],[20,17.3],[25,23.1],[30,30.4]]);
+   const p=cPick([40,50,60,70,80]);
+   return{q:`気温 ${T[0]}℃（飽和水蒸気量 ${T[1]}g/m³）の空気に水蒸気が ${r1(T[1]*p/100)}g/m³ ふくまれている。湿度は約何 % か。`,
+     a:p,u:'%',tol:1,ex:`${r1(T[1]*p/100)} ÷ ${T[1]} × 100 ≒ ${p} %`};}},
+ eq_dist:{lv:'std',f:'earth',n:'地震（震源までの距離）',mk:()=>{
+   const t=cPick([3,5,8,10,12,15,20]);
+   return{q:`P波が 6km/s、S波が 3km/s で伝わるとき、初期微動継続時間が ${t}秒 だった地点の震源からの距離は何 km か。`,
+     a:t*6,u:'km',ex:`震源距離 = ${t} × (6×3) ÷ (6−3) = ${t} × 6 = ${t*6} km`};}},
+ magnify:{lv:'easy',f:'bio',n:'顕微鏡の倍率',mk:()=>{
+   const e=cPick([5,10,15]),o=cPick([4,10,40]);
+   return{q:`接眼レンズ ${e}倍、対物レンズ ${o}倍 で観察するときの倍率は何倍か。`,
+     a:e*o,u:'倍',ex:`倍率 = 接眼 × 対物 = ${e} × ${o} = ${e*o} 倍`};}},
+ genetics:{lv:'hard',f:'bio',n:'遺伝の割合',mk:()=>{
+   const n=cPick([400,800,1200,2000]);
+   if(cRnd(0,1))return{q:`Aa と Aa をかけ合わせて ${n}個体 得られた。顕性形質が現れるのは約何個体か。`,
+     a:n*3/4,u:'個体',ex:`顕性:潜性 = 3:1。${n} × 3/4 = ${n*3/4} 個体`};
+   return{q:`Aa と Aa をかけ合わせて ${n}個体 得られた。潜性形質が現れるのは約何個体か。`,
+     a:n/4,u:'個体',ex:`顕性:潜性 = 3:1。${n} × 1/4 = ${n/4} 個体`};}},
+};
+const CALCS=Object.keys(CALC);
+function calcName(t){return (CALC[t]||{}).n||t;}
+function calcPool(lv){return CALCS.filter(c=>lv==='all'||CALC[c].lv===lv);}
+function mkCalc(cat){const o=CALC[cat].mk();o.t=cat;o.f=CALC[cat].f;return o;}
+const CALC_N=10, CALC_CAT_MAX=4;
+function calcScore(cat,today){
+  const s=state.cstat[cat];
+  if(!s||(s.c+s.w)===0)return 55;
+  const err=s.w/(s.c+s.w);
+  const el=Math.max(0,s.d?today-s.d:60);
+  return Math.max(5, 20+err*120+Math.min(el,30)*1.5);
+}
+function buildCalc(){
+  const pool=calcPool(curLv);
+  if(!pool.length)return [];
+  const today=dayNum();
+  const w=pool.map(c=>Math.pow(calcScore(c,today),2));
+  const used={},list=[];
+  for(let i=0;i<CALC_N;i++){
+    let tot=0;
+    const ww=pool.map((c,k)=>{const v=(used[c]||0)>=CALC_CAT_MAX?0:w[k];tot+=v;return v;});
+    if(tot<=0)break;
+    let r=Math.random()*tot,cat=pool[0];
+    for(let k=0;k<pool.length;k++){r-=ww[k];if(r<=0){cat=pool[k];break;}}
+    used[cat]=(used[cat]||0)+1;
+    list.push(mkCalc(cat));
+  }
+  return list;
+}
+function startCalc(){
+  const list=buildCalc();
+  if(list.length<3){toast('この難易度の計算問題が足りないよ');return;}
+  clearInterval(g.timer);
+  g={list:list,i:0,score:0,miss:[],answered:false,combo:0,maxCombo:0,ta:false,t:0,timer:null,
+     field:'calc',calc:true,buf:'',t0:Date.now()};
+  renderCalc();
+}
+function renderCalc(){
+  if(g.i>=g.list.length)return finishCalc();
+  const q=g.list[g.i];
+  const cls=g.answered?(calcOk(q,g.buf)?'ansbox ok':'ansbox ng'):'ansbox';
+  screen.innerHTML=`
+    <button class="back" onclick="quitQuiz()">‹ もどる</button>
+    <div class="qhead"><div class="left"><h2>🧮 理科の計算</h2>
+      ${g.combo>=2?`<span class="combo">🔥 ${g.combo}コンボ</span>`:''}</div>
+      <span class="combo">${g.i+1}/${g.list.length}</span></div>
+    <div class="bar-top"><i style="width:${g.i/g.list.length*100}%"></i></div>
+    <div class="qcard">
+      <div class="qmeta"><span class="tagf">${esc(fieldName(q.f))}</span><span class="taglv ${CALC[q.t].lv}">${LV[CALC[q.t].lv].n}</span></div>
+      <div class="qtext">${esc(q.q)}</div>
+      <div class="${cls}"><span class="v">${g.buf||(g.answered?'—':'')}</span>${
+        g.answered?'':'<span class="cursor"></span>'}<span class="u">${esc(q.u)}</span></div>
+    </div>
+    ${g.answered?calcFb():calcPad()}`;
+}
+function calcPad(){
+  const k=(v,l,c)=>`<button class="${c||''}" onclick="calcKey('${v}')">${l}</button>`;
+  return `<div class="pad">
+    ${k('7','7')}${k('8','8')}${k('9','9')}
+    ${k('4','4')}${k('5','5')}${k('6','6')}
+    ${k('1','1')}${k('2','2')}${k('3','3')}
+    ${k('.','・','fn')}${k('0','0')}${k('del','⌫','fn')}</div>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="calcKey('go')">こたえる</button>`;
+}
+function calcOk(q,buf){
+  const v=parseFloat(buf);
+  if(isNaN(v))return false;
+  return Math.abs(v-q.a)<=(q.tol||1e-6);
+}
+function calcKey(k){
+  if(!g||!g.calc||g.answered)return;
+  if(k==='del')g.buf=g.buf.slice(0,-1);
+  else if(k==='go')return submitCalc();
+  else if(k==='.'){ if(g.buf.indexOf('.')<0&&g.buf!=='')g.buf+='.'; }
+  else { if(g.buf.replace('.','').length<7)g.buf+=k; }
+  renderCalc();
+}
+function submitCalc(){
+  if(!g||g.answered||g.buf===''||g.buf==='.')return;
+  g.answered=true;
+  const q=g.list[g.i],ok=calcOk(q,g.buf);
+  bumpQ();
+  if(ok){g.score++;g.combo++;g.maxCombo=Math.max(g.maxCombo,g.combo);
+    if(g.combo>state.maxCombo)state.maxCombo=g.combo;
+    addXp(XPLV[CALC[q.t].lv]+4+(g.combo>=5?10:g.combo>=3?5:0));touchStreak();
+    pop(g.combo>=3?14:8);}
+  else{g.combo=0;g.miss.push(q);}
+  const cs=state.cstat[q.t]||{c:0,w:0};
+  if(ok)cs.c++; else cs.w++;
+  cs.d=dayNum(); state.cstat[q.t]=cs;
+  save();checkAch();renderCalc();
+}
+function calcFb(){
+  const q=g.list[g.i],ok=calcOk(q,g.buf);
+  return `<div class="exp"><b>${ok?'⭕ 正解':'❌ 正解は '+q.a+' '+q.u}</b>　${esc(q.ex)}</div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="nextCalc()">次へ ›</button>`;
+}
+function nextCalc(){ g.i++; g.answered=false; g.buf=''; renderCalc(); }
+function finishCalc(){
+  const total=g.list.length,rate=Math.round(g.score/total*100),rk=rankOf(rate);
+  const sec=Math.round((Date.now()-g.t0)/1000);
+  state.calcDone=(state.calcDone||0)+1;
+  unlock('first');
+  if(g.score===total&&total>=CALC_N)unlock('calcperfect');
+  save();checkAch();
+  const per={};
+  g.list.forEach(q=>{per[q.t]=per[q.t]||{n:0,ng:0};per[q.t].n++;});
+  g.miss.forEach(q=>{if(per[q.t])per[q.t].ng++;});
+  const all=Object.keys(per).map(t=>({t:t,n:per[t].n,ok:per[t].n-per[t].ng}))
+    .sort((a,b)=>(a.ok/a.n)-(b.ok/b.n));
+  const bad=all.filter(r=>r.ok<r.n);
+  const show=(bad.length?bad:all).slice(0,6);
+  const restN=all.length-show.length;
+  const rows=show.map(r=>{const p=r.ok/r.n*100;
+    return `<div class="catrow"><span class="cn">${esc(calcName(r.t))}</span>
+      <span class="catbar"><i class="${p<50?'bad':p<100?'mid':''}" style="width:${p}%"></i></span>
+      <span class="cv">${r.ok}/${r.n}</span></div>`;}).join('')
+    +(restN?`<p class="help" style="margin-top:8px">ほか ${restN} 種類は全問正解</p>`:'');
+  const miss=g.miss.length?`<div class="label" style="margin-top:4px">まちがえた問題</div>
+    <div class="misslist">${g.miss.map(q=>`<div class="r"><div class="q">${esc(q.q)}</div>
+      <div class="a">${q.a} ${esc(q.u)}　${esc(q.ex)}</div></div>`).join('')}</div>`:'';
+  screen.innerHTML=`
+    <button class="back" onclick="renderHome()">‹ もどる</button>
+    <div class="result">
+      <div class="rank">${rk}</div>
+      <div class="big">${g.score}<span style="font-size:22px;color:var(--sub)">/${total}</span></div>
+      <h2>${rate===100?'全問正解！':rate>=80?'いい調子！':rate>=50?'ここが伸びしろ':'式から見直そう'}</h2>
+      <p>正答率 ${rate}% ／ ${Math.floor(sec/60)}分${String(sec%60).padStart(2,'0')}秒</p>
+    </div>
+    <div class="label">📊 種類べつ</div>
+    <div class="statcard" style="display:block;padding:12px 16px">${rows}</div>
+    ${miss}
+    <p class="help" style="text-align:center;margin:10px 0 0">計算問題は毎回その場で作られるので、同じ数字は二度と出ない</p>
+    <div class="row2" style="margin-top:10px">
+      <button class="btn btn-ghost" onclick="renderHome()">ホーム</button>
+      <button class="btn btn-primary" onclick="startCalc()">もう一度</button>
+    </div>`;
+  if(rate>=85)setTimeout(()=>pop(18),200);
+}
+
 /* ===================== 今日の10問 =====================
    苦手 → そろそろ忘れそうな問題 → まだ解いていない問題、の順に優先度をつけて
    毎日10問だけ選ぶ。たまった数は表に出さない。                        */
