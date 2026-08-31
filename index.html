@@ -793,45 +793,45 @@ let curLv='all';
 
 const XPLV={easy:8,std:10,hard:14};
 const ACH=[
- {id:'first',name:'はじめの一歩',desc:'クイズを1回クリア'},
+ {id:'first',name:'ガリレオの一歩',desc:'クイズを1回クリア'},
  {id:'combo5',name:'連鎖反応',desc:'5コンボ達成'},
  {id:'combo10',name:'臨界突破',desc:'10コンボ達成'},
  {id:'combo20',name:'超伝導',desc:'20コンボ達成'},
  {id:'perfect',name:'完全結晶',desc:'10問クイズで全問正解'},
- {id:'solve50',name:'観察者',desc:'50問に挑戦'},
- {id:'solve100',name:'探究者',desc:'100問に挑戦'},
- {id:'solveall',name:'全領域制覇',desc:'すべての問題に挑戦'},
- {id:'phys50',name:'物理の使い手',desc:'物理で50問正解'},
- {id:'chem50',name:'化学の使い手',desc:'化学で50問正解'},
- {id:'bio50',name:'生物の使い手',desc:'生物で50問正解'},
- {id:'earth50',name:'地学の使い手',desc:'地学で50問正解'},
- {id:'hard50',name:'入試レベル攻略',desc:'入試レベルで50問正解'},
+ {id:'solve50',name:'ファーブルの観察',desc:'50問に挑戦'},
+ {id:'solve100',name:'ビーグル号の航海',desc:'100問に挑戦'},
+ {id:'solveall',name:'フンボルトの踏破',desc:'すべての問題に挑戦'},
+ {id:'phys50',name:'ニュートンの林檎',desc:'物理で50問正解'},
+ {id:'chem50',name:'ラボアジエの天秤',desc:'化学で50問正解'},
+ {id:'bio50',name:'メンデルのエンドウ',desc:'生物で50問正解'},
+ {id:'earth50',name:'ウェゲナーの大陸',desc:'地学で50問正解'},
+ {id:'hard50',name:'キュリーの根気',desc:'入試レベルで50問正解'},
  {id:'ta15',name:'反応速度',desc:'タイムアタック15問'},
  {id:'ta20',name:'光速の思考',desc:'タイムアタック20問'},
  {id:'ta30',name:'超音速',desc:'タイムアタック30問'},
- {id:'streak3',name:'3日連続',desc:'3日連続で学習'},
- {id:'streak7',name:'週間パーフェクト',desc:'7日連続で学習'},
+ {id:'streak3',name:'三日の観測',desc:'3日連続で学習'},
+ {id:'streak7',name:'ティコの観測記録',desc:'7日連続で学習'},
  {id:'streak14',name:'恒常性',desc:'14日連続で学習'},
  {id:'streak30',name:'不変の法則',desc:'30日連続で学習'},
- {id:'lv5',name:'Lv.5 到達',desc:'レベル5に到達'},
- {id:'lv10',name:'Lv.10 到達',desc:'レベル10に到達'},
- {id:'lv20',name:'Lv.20 到達',desc:'最高レベルに到達'},
- {id:'cards10',name:'収集家',desc:'図鑑を10種あつめる'},
- {id:'cards30',name:'蒐集家',desc:'図鑑を30種あつめる'},
- {id:'cards50',name:'大収集家',desc:'図鑑を50種あつめる'},
+ {id:'lv5',name:'ファラデーの実験室',desc:'レベル5に到達'},
+ {id:'lv10',name:'ボーアの励起',desc:'レベル10に到達'},
+ {id:'lv20',name:'アインシュタインの視座',desc:'最高レベルに到達'},
+ {id:'cards10',name:'リンネの分類',desc:'図鑑を10種あつめる'},
+ {id:'cards30',name:'ダーウィンの標本',desc:'図鑑を30種あつめる'},
+ {id:'cards50',name:'ウォレスの採集',desc:'図鑑を50種あつめる'},
  {id:'cards34',name:'博物館長',desc:'図鑑をコンプリート'},
 ];
 const ACH_SECRET=[
  {id:'nightowl',name:'夜行性',desc:'深夜0時〜4時に学習した'},
  {id:'earlybird',name:'朝型生物',desc:'早朝5時〜7時に学習した'},
- {id:'marathon',name:'持久力',desc:'1日に50問回答した'},
+ {id:'marathon',name:'エジソンの試行',desc:'1日に50問回答した'},
  {id:'allfield',name:'四元素マスター',desc:'4分野すべてで学習した'},
  {id:'comeback',name:'再結晶',desc:'苦手を10問ためてから0にした'},
  {id:'secret',name:'未知との遭遇',desc:'隠し図鑑を手に入れた'},
- {id:'calcperfect',name:'計算名人',desc:'理科の計算を全問正解した'},
- {id:'calc10',name:'式で考える人',desc:'理科の計算を10回やった'},
- {id:'daily7',name:'日課',desc:'今日の10問を7回やりきった'},
- {id:'daily30',name:'習慣化',desc:'今日の10問を30回やりきった'},
+ {id:'calcperfect',name:'ケプラーの筆算',desc:'理科の計算を全問正解した'},
+ {id:'calc10',name:'単位をそろえる人',desc:'理科の計算を10回やった'},
+ {id:'daily7',name:'習慣の芽',desc:'今日の10問を7回やりきった'},
+ {id:'daily30',name:'根づいた習慣',desc:'今日の10問を30回やりきった'},
 ];
 function achAll(){return ACH.concat(ACH_SECRET);}
 function isSecret(id){return ACH_SECRET.some(a=>a.id===id);}
@@ -931,7 +931,7 @@ function pool(field,lv){return Q.filter(q=>(field==='all'||q.f===field)&&(lv==='
 function weak(){return Q.filter(q=>{const s=state.stats[q.id];return s&&s.w>0&&s.c<=s.w})}
 function rankOf(p){return p>=95?'S':p>=85?'A':p>=70?'B':p>=50?'C':'D'}
 
-const APP_VER='20260831c';
+const APP_VER='20260831d';
 function forceUpdate(){ location.replace(location.origin+location.pathname+'?v='+Date.now()); }
 async function checkUpdate(silent){
   try{
