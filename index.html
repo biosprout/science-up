@@ -1013,7 +1013,7 @@ function pool(field,lv){return Q.filter(q=>(field==='all'||q.f===field)&&(lv==='
 function weak(){return Q.filter(q=>{const s=state.stats[q.id];return s&&s.w>0&&s.c<=s.w})}
 function rankOf(p){return p>=95?'S':p>=85?'A':p>=70?'B':p>=50?'C':'D'}
 
-const APP_VER='20260831i';
+const APP_VER='20260831j';
 function forceUpdate(){ location.replace(location.origin+location.pathname+'?v='+Date.now()); }
 async function checkUpdate(silent){
   try{
@@ -1284,7 +1284,7 @@ function renderTitles(){
   screen.innerHTML=`
     <button class="back" onclick="renderHome()">‹ 戻る</button>
     <div class="qhead"><h2>🔬 探究の記録</h2><span class="combo" style="color:var(--accent)">${lv}/${EVO.length}</span></div>
-    <p class="help" style="margin-bottom:12px">レベルが上がるたびに称号が変わる。観察から始まり、実験・測定を経て、未知に挑む科学者へ。</p>
+    <p class="help" style="margin-bottom:12px">レベルが上がるたびに称号が変わる。観察から始まり、実験や測定を重ねて、その先へ。</p>
     ${rows}
     <button class="btn btn-ghost" style="margin-top:10px" onclick="renderHome()">ホームに戻る</button>`;
 }
