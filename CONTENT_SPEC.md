@@ -18,6 +18,10 @@
 
 「理科の計算」（数値入力）は固定問題ではなく index.html 内の generator がその場で作る。data/ には含めない。
 
+## source of truth
+
+**教材の唯一の source of truth は `data/*.json` である。** 教材を直すときは JSON を直接編集し、`format-content.mjs` → `validate-content.mjs` を通して commit する。過去に JSON を生成するために使った元原稿（引き継ぎ資料の `add_*.js` `fix_*.js` など）は、生成が終わった時点で役目を終えた作業ファイルであり、今後の source of truth ではない。JSON と元原稿を別々に更新する運用はしない。
+
 ## 2. manifest（data/index.json）の schema
 
 ```json
@@ -133,7 +137,9 @@ python3 -m http.server 8000
 
 - `sw.js` は index.html と `data/*.json` を network-first で取得する。オンラインなら常に最新の JSON が届き、取得できたものをキャッシュに保存する。オフラインのときだけキャッシュを返す
 - そのため、JSON を更新するたびに `sw.js` の `CACHE` 名を変える必要はない
-- `data/` に新しいファイルを増やしたときは、`sw.js` の `ASSETS` に追加し、`CACHE` 名の版数を上げる（初回オフライン用の precache に入れるため）
+- `data/` に新しいファイルを増やしたときは、`sw.js` の `ASSETS` に追加し、`CACHE` 名の版数を上げる（初回オフライン用の precache に入れるため）（precache に失敗すると新しい Service Worker は install されず、旧版が使われ続ける。ASSETS の path 間違いに注意）
+- cache 名は `scienceup-` で始まり（`CACHE_PREFIX`）、古い cache の掃除はこの prefix を持つものだけを対象にする。同じ origin にある他の BioSprout アプリの cache には触れない
+- 404 や 500 などの error response は cache に保存しない。network が error を返したときは、正常な cache があればそちらを返す
 - アイコン等の固定 asset は cache-first
 
 ## 10. してはいけない変更

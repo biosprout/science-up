@@ -1,6 +1,10 @@
 // SCIENCE UP! Service Worker
 // 一度読み込んだファイルをキャッシュし、オフラインでも動くようにする
-const CACHE = 'scienceup-v1';
+//
+// 同じ origin（biosprout.github.io）に他の BioSprout アプリも置かれているので、
+// cache 名はアプリ固有の CACHE_PREFIX で始め、掃除するときも自分の prefix の古い cache だけを消す。
+const CACHE_PREFIX = 'scienceup-';
+const CACHE = CACHE_PREFIX + 'v2';
 const ASSETS = [
   './',
   './index.html',
@@ -15,25 +19,42 @@ const ASSETS = [
   './data/earth.json'
 ];
 
+// 必須 asset の precache に失敗したら install を失敗させる（既存の Service Worker がそのまま残る）。
+// このとき新しく作った空の cache は消す。すでにあった cache（稼働中の版）には触れない。
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE)
-      .then(c => c.addAll(ASSETS).catch(() => {}))
-      .then(() => self.skipWaiting())
+    caches.has(CACHE).then(existed =>
+      caches.open(CACHE)
+        .then(c => c.addAll(ASSETS))
+        .catch(err => (existed ? Promise.resolve() : caches.delete(CACHE)).then(() => { throw err; }))
+    ).then(() => self.skipWaiting())
   );
 });
 
+// 自分の prefix を持つ古い cache だけ削除する。他アプリの cache と、今使っている CACHE は残す
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(
+        keys.filter(k => k.startsWith(CACHE_PREFIX) && k !== CACHE).map(k => caches.delete(k))
+      ))
       .then(() => self.clients.claim())
   );
 });
 
+// 正常な response（ok）だけを cache に保存する。404 や 500 は保存しない
+function putIfOk(req, res){
+  if(res && res.ok){
+    const copy = res.clone();
+    caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+  }
+  return res;
+}
+
 // アプリ本体と問題データはネットワーク優先。失敗したときだけキャッシュを使う。
-// こうしておくと、data/*.json を差し替えるだけで新しい問題が届く
+// こうしておくと、data/*.json を差し替えるだけで新しい内容が届く
 // （このファイルの CACHE 版数を上げ直さなくてよい）。
+// ネットワークが error response（404 等）を返したときも、正常な cache があればそちらを返す。
 // アイコンなど変わらないものはキャッシュ優先で速く出す。
 self.addEventListener('fetch', e => {
   const req = e.request;
@@ -48,19 +69,14 @@ self.addEventListener('fetch', e => {
     e.respondWith(
       fetch(req, { cache: 'no-store' })
         .then(res => {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
-          return res;
+          if (res.ok) return putIfOk(req, res);
+          return caches.match(req).then(hit => hit || (isDoc ? caches.match('./index.html') : null) || res);
         })
         .catch(() => caches.match(req).then(r => r || (isDoc ? caches.match('./index.html') : undefined)))
     );
     return;
   }
   e.respondWith(
-    caches.match(req).then(hit => hit || fetch(req).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
-      return res;
-    }))
+    caches.match(req).then(hit => hit || fetch(req).then(res => putIfOk(req, res)))
   );
 });
