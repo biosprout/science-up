@@ -1,0 +1,8 @@
+# macOS / エディタが作る不要ファイル
+.DS_Store
+._*
+Thumbs.db
+
+# ローカル作業用
+node_modules/
+*.log
