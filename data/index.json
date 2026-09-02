@@ -2,10 +2,10 @@
   "version": 1,
   "levels": ["easy","std","hard"],
   "sets": [
-    {"id":"phys","name":"物理（光・音・力・電気）","file":"phys.json","kind":"quiz","count":105},
-    {"id":"chem","name":"化学（物質・化学変化）","file":"chem.json","kind":"quiz","count":103},
-    {"id":"bio","name":"生物（植物・動物・遺伝）","file":"bio.json","kind":"quiz","count":95},
-    {"id":"earth","name":"地学（大地・天気・天体）","file":"earth.json","kind":"quiz","count":95}
+    {"id":"phys","name":"物理（光・音・力・電気）","file":"phys.json","kind":"quiz","count":106},
+    {"id":"chem","name":"化学（物質・化学変化）","file":"chem.json","kind":"quiz","count":104},
+    {"id":"bio","name":"生物（植物・動物・遺伝）","file":"bio.json","kind":"quiz","count":96},
+    {"id":"earth","name":"地学（大地・天気・天体）","file":"earth.json","kind":"quiz","count":96}
   ],
-  "total": 398
+  "total": 402
 }
