@@ -104,7 +104,8 @@ const LEVELS = ['easy', 'std', 'hard'];
 
 const idx = readJson('index.json');
 if(!idx){ finish([]); }
-checkKeys('index.json', '', idx, ['version', 'sets', 'total'], ['levels']);
+checkKeys('index.json', '', idx, ['version', 'contentVersion', 'sets', 'total'], ['levels']);
+checkStr('index.json', '', 'contentVersion', idx.contentVersion);   // 教材版 ID（batch 取込で batch_id に更新。空にしない）
 if(idx.version !== 1) err('index.json', '', `version は 1 である必要があります（今は ${idx.version}）`);
 if(idx.levels && JSON.stringify(idx.levels) !== JSON.stringify(LEVELS)) err('index.json', '', `levels は ${JSON.stringify(LEVELS)} である必要があります`);
 if(!Array.isArray(idx.sets)) { err('index.json', '', 'sets は配列である必要があります'); finish([]); }

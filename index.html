@@ -223,6 +223,11 @@
     <b style="flex:1">新しいバージョンがあります</b>
     <button onclick="forceUpdate()" style="background:#1A1400;color:var(--accent);border:0;border-radius:8px;padding:7px 12px;font-weight:800;font-size:12px">更新する</button>
   </div>
+  <div id="cuBar" role="status" aria-live="polite" style="display:none;align-items:center;gap:10px;background:var(--accent);color:#1A1400;padding:10px 14px;border-radius:12px;margin:0 0 12px;font-size:13px;font-weight:700">
+    <b style="flex:1">🆕 新しい問題があります</b>
+    <button onclick="cuReload()" style="background:#1A1400;color:var(--accent);border:0;border-radius:8px;padding:7px 12px;font-weight:800;font-size:12px">更新</button>
+    <button onclick="cuLater()" style="background:transparent;color:#1A1400;border:1.5px solid #1A1400;border-radius:8px;padding:6px 10px;font-weight:800;font-size:12px">あとで</button>
+  </div>
   <div style="display:none">
   </div>
   <div class="screen" id="screen"></div>
@@ -252,7 +257,7 @@ async function loadQuestions(){
     const doc=await (await fetch(QDIR+st.file,{cache:'no-cache'})).json();
     return {kind:st.kind||'quiz', items:doc.items};
   }));
-  QMETA=idx;
+  QMETA=idx; cuInit(idx);
   Q=[].concat.apply([],parts.filter(p=>p.kind==='quiz').map(p=>p.items));
   if(!Q.length)throw new Error('empty');
   qLoad='ok';
@@ -637,7 +642,7 @@ function pool(field,lv){return Q.filter(q=>(field==='all'||q.f===field)&&(lv==='
 function weak(){return Q.filter(q=>{const s=state.stats[q.id];return s&&s.w>0&&s.c<=s.w})}
 function rankOf(p){return p>=95?'S':p>=85?'A':p>=70?'B':p>=50?'C':'D'}
 
-const APP_VER='20260902a';
+const APP_VER='20260902b';
 function forceUpdate(){ location.replace(location.origin+location.pathname+'?v='+Date.now()); }
 async function checkUpdate(silent){
   try{
@@ -1400,6 +1405,46 @@ screen.innerHTML=`<div class="statcard" style="flex-direction:column;text-align:
   <div style="font-size:34px">🔬</div><div style="font-weight:900;font-size:15px">問題を読み込み中...</div></div>`;
 loadQuestions().then(()=>{ renderHome(); }).catch(()=>{ qLoad='fail'; loadFailScreen(); });
 setTimeout(()=>checkUpdate(true),1500);
+
+/* ===== 教材更新バー（contentVersion） =====
+   教材 JSON だけが更新されたとき、学習を止めずに「🆕 新しい問題があります」を出す。
+   APP_VER はコード更新の通知に使い、教材だけの更新は data/index.json の contentVersion で検出する。
+   contentVersion は不透明な ID で、大小比較はせず「等しいかどうか」だけを見る。
+   確認のタイミング: window focus / visible への復帰 / visible 中は 30 分ごと。同一タブでは最低 60 秒あける。
+   network error・offline・non-OK・JSON error は静かに無視する。バーを出すだけで Q や localStorage は変えない。 */
+const CU={cur:null,remote:null,last:0,ready:false};
+const CU_MIN_MS=60*1000, CU_PERIOD_MS=30*60*1000, CU_KEY='scienceup_cu_dismissed';
+function cuInit(idx){
+  CU.cur=(idx&&typeof idx.contentVersion==='string'&&idx.contentVersion)?idx.contentVersion:null;
+  CU.ready=true; CU.last=Date.now();   // 初回ロード直後は確認しない
+}
+async function cuCheck(){
+  if(!CU.ready||!CU.cur)return;
+  const now=Date.now(); if(now-CU.last<CU_MIN_MS)return; CU.last=now;
+  if(navigator.onLine===false)return;
+  try{
+    const r=await fetch(QDIR+'index.json',{cache:'no-store'});
+    if(!r.ok)return;
+    const idx=await r.json();
+    const v=(idx&&typeof idx.contentVersion==='string'&&idx.contentVersion)?idx.contentVersion:null;
+    if(!v||v===CU.cur)return;
+    cuShow(v);
+  }catch(e){}
+}
+function cuShow(v){
+  let dismissed=null; try{dismissed=sessionStorage.getItem(CU_KEY);}catch(e){}
+  if(dismissed===v)return;                 // 「あとで」を押した version は同じタブでは再表示しない
+  CU.remote=v;
+  const bar=document.getElementById('cuBar'); if(bar)bar.style.display='flex';
+}
+function cuLater(){
+  try{ if(CU.remote)sessionStorage.setItem(CU_KEY,CU.remote); }catch(e){}
+  const bar=document.getElementById('cuBar'); if(bar)bar.style.display='none';
+}
+function cuReload(){ location.reload(); }
+window.addEventListener('focus',cuCheck);
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible')cuCheck(); });
+setInterval(()=>{ if(document.visibilityState==='visible')cuCheck(); },CU_PERIOD_MS);
 
 /* Service Worker の登録（オフライン対応） */
 if('serviceWorker' in navigator){
